@@ -9,6 +9,6 @@ $config = parse_ini("config.ini");
 
 $local = $config['general']['local'];
 
-
+print_r($config);
 
 ?>

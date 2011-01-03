@@ -1,3 +1,7 @@
+# MediaHub Config File
+# Please change the appropriate values below and then rename this
+# file to config.ini before using MediaHub
+
 [general]
 local = true
 
