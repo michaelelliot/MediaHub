@@ -79,14 +79,14 @@ Fields referring to duration are stored in seconds.
 
 ## 2. Search Keywords
 All searching is done using search keywords. Each keyword has a type which
-allows different types of searches to be performed. e.g.: `year:2001`
+allows different types of searches to be performed. e.g.: year:2001
 
 Types of keywords include movie, year (int), series, season (int),
 episode (int), artist, imdb, rating (int), actor, director, producer, writer,
 song/track, genre
 
 Types that are integers (int) allow for searches like year:>2000 or
-year:<2000 etc. ``year>2000`` and ``year<2000`` are also acceptable.
+year:<2000 etc. `year\>2000` and `year\<2000` are also acceptable.
 
 The genre type will refer to movie_genres if the search includes "movie:" or to
 album_genre for "album:" etc.
