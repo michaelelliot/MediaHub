@@ -4,7 +4,8 @@
  */
 include("common.inc.php");
 
-$section = $_REQUEST['section'];
+$section = @trim(preg_replace("/[^a-z]/i", "", $_REQUEST['section']));
+if (!$section) $section = "home";
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -13,9 +14,7 @@ $section = $_REQUEST['section'];
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="Content-language" content="en" />
 	<meta name="description" content="" />
-        <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.js"></script>-->
-
+        
         <!-- Load Queue widget CSS and jQuery -->
         <style type="text/css">@import url(css/plupload.queue.css);</style>
         <script type="text/javascript" src="http://www.google.com/jsapi"></script>
@@ -23,25 +22,12 @@ $section = $_REQUEST['section'];
                 google.load("jquery", "1.4.4");
                 google.load("jqueryui", "1.8.7");
         </script>
-
-        <!-- Thirdparty intialization scripts, needed for the Google Gears and BrowserPlus runtimes -->
-        <script type="text/javascript" src="plupload/js/gears_init.js"></script>
-        <script type="text/javascript" src="plupload/js/browserplus-min.js"></script>
-
         <!-- Load plupload and all it's runtimes and finally the jQuery queue widget -->
-        <script type="text/javascript" src="plupload/js/plupload.min.js"></script>
-        <!--<script type="text/javascript" src="plupload/js/plupload.gears.min.js"></script>
-        <script type="text/javascript" src="plupload/js/plupload.silverlight.min.js"></script>
-        <script type="text/javascript" src="plupload/js/plupload.flash.min.js"></script>
-        <script type="text/javascript" src="plupload/js/plupload.browserplus.min.js"></script>
-        <script type="text/javascript" src="plupload/js/plupload.html4.min.js"></script>
-        <script type="text/javascript" src="plupload/js/plupload.html5.min.js"></script>-->
         <script type="text/javascript" src="plupload/js/jquery.ui.plupload.min.js"></script>
-
-        <!-- Load plupload and all it's runtimes and finally the jQuery queue widget -->
         <script type="text/javascript" src="plupload/js/plupload.full.min.js"></script>
         <script type="text/javascript" src="plupload/js/jquery.plupload.queue.min.js"></script>
         <script type="text/javascript">
+
         // Convert divs to queue widgets when the DOM is ready
         $(function() {
 
@@ -253,7 +239,9 @@ $section = $_REQUEST['section'];
 </textarea>
 
         <div style="width: 1000px; border: 1px solid gray;">
-  
+
+           <a href="?section=upload">Upload Content</a><br /><br />
+
             <?php
             if ($section == "upload") {
                 include("page_upload.php");
