@@ -86,7 +86,7 @@ episode (int), artist, imdb, rating (int), actor, director, producer, writer,
 song/track, genre
 
 Types that are integers (int) allow for searches like year:>2000 or
-year:<2000 etc. `year>2000` and `year<2000` are also acceptable.
+year:<2000 etc. ``year>2000`` and ``year<2000`` are also acceptable.
 
 The genre type will refer to movie_genres if the search includes "movie:" or to
 album_genre for "album:" etc.
