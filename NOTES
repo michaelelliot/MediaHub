@@ -1,0 +1,65 @@
+--------------------------------------------------------------------------------
+NOTES
+--------------------------------------------------------------------------------
+The general idea of MediaHub is to provide publishers with a way to easily
+store and manage information about their content. This content can then be
+accessed via the MediaHub API and conveniently delivered to consumers. :D
+
+While the MediaHub server stores information about the content it holds, this
+information can be periodically updated to reflect the information stored at
+MediaTag. This provides a central place for accurate meta data to be stored and
+managed.
+
+An example of how this can be helpful is the change of the capitalization of
+the band silverchair. They originally used the typical uppercase first letter
+convention, then later announced that their band name would be entirely lower
+case. The MediaTag entries for silverchair content could be ammended and would
+eventually be updated by all the MediaHub servers.
+
+--------------------------------------------------------------------------------
+Content Keys
+--------------------------------------------------------------------------------
+key_torrent_btih
+key_torrent_filename
+
+--------------------------------------------------------------------------------
+Content Fields
+--------------------------------------------------------------------------------
+# Fields for all content types
+content_type
+mtag
+publisher_name
+publisher_url
+
+# Fields for movies
+movie_title
+movie_year
+movie_genre
+
+# Fields for music
+album_title
+album_year
+album_genre
+album_artist
+track_title
+track_number
+track_artist
+
+# Fields for series
+series_name
+season_number
+episode_number
+episode_title
+episode_production_code
+
+# Items are stored in the below fields separated by a semicolon.
+# e.g. Bruce Willis; Brad Pitt; Elvis Presley
+actors
+directors
+producers
+writers
+
+# Fields for storing content sources
+source_btih
+source_url
+--------------------------------------------------------------------------------
