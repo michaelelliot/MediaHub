@@ -1,32 +1,27 @@
 <?php
 require_once('includes/sql_db_ex3.inc.php');
 
-ini_set("memory_limit", "30M");
+global $config;
 
-function ensure_sql_connected()
-{
-    global $sql_db,$config;
+//ini_set("memory_limit", "30M");
 
-    if ($sql_db) return;
-    
-    if ($config['general']['local']) {
-    $db_settings = array(
-        "server" => $config['local']['mysql_server'],
-        "database" => $config['local']['mysql_database'],
-        "username" => $config['local']['mysql_username'],
-        "password" => $config['local']['mysql_password']);
-    } else {
-    $db_settings = array(
-        "server" => $config['remote']['mysql_server'],
-        "database" => $config['remote']['mysql_database'],
-        "username" => $config['remote']['mysql_username'],
-        "password" => $config['remote']['mysql_password']);
-    }
-    $db_settings['persistent'] = false;
-    $db_settings['die_message'] = false;
+error_reporting(E_ALL);// ^ E_NOTICE);
 
-    $sql_db = new DB($db_settings);
-}
+# Load config
+if (!file_exists("config.ini")) die("Please rename config.ini.rename to config.ini and configure it!");
+$config = parse_ini_file("config.ini", true);
+
+# Database setup
+$db_settings = array(
+    "server" => $config['mysql']['server'],
+    "database" => $config['mysql']['database'],
+    "username" => $config['mysql']['username'],
+    "password" => $config['mysql']['password']);
+
+$db_settings['die_message'] = false;
+
+$sql_db = new DB($db_settings);
+
 
 
 

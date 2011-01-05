@@ -7,13 +7,13 @@ local = true
 
 
 [local]
-mysql_username = "mediahub"
-mysql_password = "changeme"
+mysql_username = "root"
+mysql_password = ""
 mysql_database = "mediahub"
 mysql_server   = "localhost"
 
 [remote]
 mysql_username = "mediahub"
-mysql_password = "changeme"
+mysql_password = ""
 mysql_database = "mediahub"
 mysql_server   = ""

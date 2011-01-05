@@ -4,17 +4,7 @@
  */
 include("common.inc.php");
 
-error_reporting(E_ALL ^ E_NOTICE);
-
-// Load config
-//if (file_exists("config.ini.rename")) die("Please rename config.ini.rename to config.ini and configure it!");
-$config = parse_ini_file("config.ini", true);
-
-ensure_sql_connected();
-
-
-
-
+$section = $_REQUEST['section'];
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -30,10 +20,10 @@ ensure_sql_connected();
         <style type="text/css">@import url(css/plupload.queue.css);</style>
         <script type="text/javascript" src="http://www.google.com/jsapi"></script>
         <script type="text/javascript">
-                //google.load("jquery", "1.3");
                 google.load("jquery", "1.4.4");
                 google.load("jqueryui", "1.8.7");
         </script>
+
         <!-- Thirdparty intialization scripts, needed for the Google Gears and BrowserPlus runtimes -->
         <script type="text/javascript" src="plupload/js/gears_init.js"></script>
         <script type="text/javascript" src="plupload/js/browserplus-min.js"></script>
@@ -112,7 +102,7 @@ ensure_sql_connected();
                         multiple_queues : false,
 
                         // Resize images on clientside if we can
-                        resize : {width : 320, height : 240, quality : 90},
+                        //resize : {width : 320, height : 240, quality : 90},
 
                         // Rename files by clicking on their titles
                         rename: true,
@@ -122,7 +112,7 @@ ensure_sql_connected();
 
                         // Specify what files to browse for
                         filters : [
-                                {title : "Image files", extensions : "jpg,jpeg,gif,png", max_file_count: 1}
+                                {title : "Torrent files", extensions : "torrent"}
                             
                         ],
 
@@ -157,6 +147,9 @@ ensure_sql_connected();
                             StateChanged: function(up) {
                                     // Called when the state of the queue is changed
                                     log('[StateChanged]', up.state == plupload.STARTED ? "STARTED" : "STOPPED");
+                                    if (up.state == plupload.STOPPED) {
+                                     setTimeout("$('form').submit();", 1);
+                                    }
                             },
 
                             QueueChanged: function(up) {
@@ -196,6 +189,8 @@ ensure_sql_connected();
                             FileUploaded: function(up, file, info) {
                                     // Called when a file has finished uploading
                                     log('[FileUploaded] File:', file, "Info:", info);
+
+                                    //$('form').submit();
                             },
 
                             ChunkUploaded: function(up, file, info) {
@@ -258,29 +253,14 @@ ensure_sql_connected();
 </textarea>
 
         <div style="width: 1000px; border: 1px solid gray;">
-
-            <br /><br /><br /><br />
-            <table cellpadding="0" cellspacing="0">
-                <tr>
-                    <td>Title: </td><td><input id="title" type="text" value="" /></td>
-                </tr>
-                <tr>
-                    <td>Year: </td><td><input id="title" type="text" value="" /></td>
-                <tr>
-                    <td> : </td><td><input id="title" type="text" value="" /></td>
-                </tr>
-                
-            </table>
-
-                <form  method="post" action="dump.php">
-                        <div id="uploader">
-                                <p>You browser doesn't have Flash, Silverlight, Gears, BrowserPlus or HTML5 support.</p>
-                        </div>
-                    <input type="submit" value="Send">
-                </form>
-
-
-
+  
+            <?php
+            if ($section == "upload") {
+                include("page_upload.php");
+            } else if ($section == "tags") {
+               include("page_tags.php");
+            }
+            ?>
             <br /><br /><br /><br /><br />
         </div>
         </center>
