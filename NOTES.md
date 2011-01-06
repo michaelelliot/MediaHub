@@ -85,30 +85,32 @@ If no search keyword is specified it will default to a "all:" search.
 
 Types of search keywords include:
     all
-        The all keyword searches the following content fields:
-            content.title
-            movie.title
-            movie.actor[]
-            movie.director[]
-            movie.producer[]
-            movie.writer[]
-            album.title
-            album.genre[]
-            album.artist
-            track.title
-            track.genre[]
-            track.artist
-            series.name
-            episode.title
+The all keyword searches the following content fields:
+    content.title
+    movie.title
+    movie.actor[]
+    movie.director[]
+    movie.producer[]
+    movie.writer[]
+    album.title
+    album.genre[]
+    album.artist
+    track.title
+    track.genre[]
+    track.artist
+    series.name
+    episode.title
+
     movie
-        The movie keyword searches the following content fields:
-            movie.title
+The movie keyword searches the following content fields:
+    movie.title
+
     year (int)
-        Depending on the type of search, the year keyword searches the following
-        content fields:
-            movie.year
-            album.year
-            track.year
+Depending on the type of search, the year keyword searches the following
+content fields:
+    movie.year
+    album.year
+    track.year
     series
 
     season (int)
