@@ -1,7 +1,14 @@
 <?php
 /* 
  * Entry point
+ * 
  */
+
+
+
+
+
+
 include("common.inc.php");
 
 $section = @trim(preg_replace("/[^a-z]/i", "", $_REQUEST['section']));
@@ -16,7 +23,7 @@ if (!$section) $section = "home";
 	<meta name="description" content="" />
         
         <!-- Load Queue widget CSS and jQuery -->
-        <style type="text/css">@import url(css/plupload.queue.css);</style>
+        <style type="text/css">@import url(plupload/css/plupload.queue.css);</style>
         <script type="text/javascript" src="http://www.google.com/jsapi"></script>
         <script type="text/javascript">
                 google.load("jquery", "1.4.4");

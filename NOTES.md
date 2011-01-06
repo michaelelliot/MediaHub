@@ -1,8 +1,8 @@
 # NOTES
 
-The general idea of MediaHub is to provide publishers with a way to easily
+The general idea behind MediaHub is to provide publishers with an easy way to
 store and manage information about their content. This content can then be
-accessed via the MediaHub API and conveniently delivered to consumers. :D
+accessed via the MediaHub API by and delivered to consumers. :D
 
 While the MediaHub server stores information about the content it holds, this
 information can be periodically updated to reflect the information stored at
@@ -26,56 +26,58 @@ Fields referring to duration are stored in seconds.
 
 ## 1.2 Content Field Names
 
-### Content keys unique to this content
-    key_torrent_btih
-    key_torrent_filename
+### Keys unique (mostly) to this content
+### e.g. torrent.info_hash:abcd
+###      torrent.filename:Torrent_file.torrent
+    mkeys
+
 
 ### Fields for all content types
-    content_type
-    content_mtag
-    content_title
-    content_rating (int)
-    publisher_name
-    publisher_url
+    content.type
+    content.mtag
+    content.title
+    content.rating (int)
+    publisher.name
+    publisher.url
 
 ### Fields for movies
-    movie_title
-    movie_year (int)
-    movie_genre[]
-    movie_actor[]
-    movie_director[]
-    movie_producer[]
-    movie_writer[]
+    movie.title
+    movie.year (int)
+    movie.genre[]
+    movie.actor[]
+    movie.director[]
+    movie.producer[]
+    movie.writer[]
 
 ### Fields for music
-    album_title
-    album_year (int)
-    album_genre[]
-    album_artist
-    track_number (int)
-    track_title
-    track_year (int)
-    track_genre[]
-    track_artist
-    track_duration (int)
+    album.title
+    album.year (int)
+    album.genre[]
+    album.artist
+    track.number (int)
+    track.title
+    track.year (int)
+    track.genre[]
+    track.artist
+    track.duration (int)
 
 ### Fields for series
-    series_name
-    series_genre[]
-    season_number (int)
-    episode_number (int)
-    episode_title
-    episode_production_code
-    episode_duration (int)
+    series.name
+    series.genre[]
+    season.number (int)
+    episode.number (int)
+    episode.title
+    episode.production.code
+    episode.duration (int)
 
 ### Fields for external references or values
-    external_imdb_tt
-    external imdb_rating (float)
-    external_rotten_tomatoes_rating (int)
+    external.imdb.tt
+    external imdb.rating (float)
+    external.rotten.tomatoes.rating (int)
 
 ### Fields for storing content sources
-    source_btih
-    source_url
+    source.btih
+    source.url
 
 ## 2. Search Keywords
 All searching is done using search keywords. Each keyword has a type which
@@ -86,7 +88,11 @@ episode (int), artist, imdb, rating (int), actor, director, producer, writer,
 song/track, genre
 
 Types that are integers (int) allow for searches like year:>2000 or
-year:<2000 etc. `year\>2000` and `year\<2000` are also acceptable.
+year:<2000 etc.
+`year\>2000`
+and
+`year\<2000`
+are also acceptable.
 
 The genre type will refer to movie_genres if the search includes "movie:" or to
 album_genre for "album:" etc.
