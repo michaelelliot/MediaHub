@@ -29,8 +29,7 @@ Fields referring to duration are stored in seconds.
 ### Keys unique (mostly) to this content
 ### e.g. torrent.info_hash:abcd
 ###      torrent.filename:Torrent_file.torrent
-    mkeys
-
+    content.mkeys[]
 
 ### Fields for all content types
     content.type
@@ -67,32 +66,77 @@ Fields referring to duration are stored in seconds.
     season.number (int)
     episode.number (int)
     episode.title
-    episode.production.code
+    episode.production_code
     episode.duration (int)
 
 ### Fields for external references or values
-    external.imdb.tt
-    external imdb.rating (float)
-    external.rotten.tomatoes.rating (int)
+    external.imdb_tt
+    external imdb_rating (float)
+    external.rotten_tomatoes_rating (int)
 
 ### Fields for storing content sources
     source.btih
     source.url
 
 ## 2. Search Keywords
-All searching is done using search keywords. Each keyword has a type which
-allows different types of searches to be performed. e.g.: year:2001
+All searching is done using search keywords. Each keyword refers to a specific
+field to search. e.g.: "year:2001" would search for content with a year of 2001.
+If no search keyword is specified it will default to a "all:" search.
 
-Types of keywords include movie, year (int), series, season (int),
-episode (int), artist, imdb, rating (int), actor, director, producer, writer,
-song/track, genre
+Types of search keywords include:
+    all
+        The all keyword searches the following content fields:
+            content.title
+            movie.title
+            movie.actor[]
+            movie.director[]
+            movie.producer[]
+            movie.writer[]
+            album.title
+            album.genre[]
+            album.artist
+            track.title
+            track.genre[]
+            track.artist
+            series.name
+            episode.title
+    movie
+        The movie keyword searches the following content fields:
+            movie.title
+    year (int)
+        Depending on the type of search, the year keyword searches the following
+        content fields:
+            movie.year
+            album.year
+            track.year
+    series
 
-Types that are integers (int) allow for searches like year:>2000 or
-year:<2000 etc.
-`year\>2000`
-and
-`year\<2000`
-are also acceptable.
+    season (int)
+
+    episode (int)
+
+    artist
+
+    imdb
+
+    rating (int)
+
+    actor
+
+    director
+
+    producer
+
+    writer
+
+    song
+
+    track
+
+    genre
+
+Types that are integers (int) allow for searches like "year:>2000" or
+"year:<2000". Searching for "year>2000" or "year<2000" is also acceptable.
 
 The genre type will refer to movie_genres if the search includes "movie:" or to
 album_genre for "album:" etc.
