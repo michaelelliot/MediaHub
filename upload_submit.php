@@ -46,6 +46,6 @@ if (isset($result)) {
     }
 }
 
-header("Location: page_tags.php");
+header("Location: index.php?section=tags");
 exit;
 ?>

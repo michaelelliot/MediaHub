@@ -1,9 +1,8 @@
 <?php
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
+echo "<pre align='left'>";
 var_dump($_COOKIE);
+echo "</pre>";
 
 ?>
 <table cellpadding="0" cellspacing="0">

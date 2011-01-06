@@ -21,7 +21,9 @@ if (!$section) $section = "home";
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="Content-language" content="en" />
 	<meta name="description" content="" />
-        
+
+        <style type="text/css">@import url(css/styles.css);</style>
+
         <!-- Load Queue widget CSS and jQuery -->
         <style type="text/css">@import url(plupload/css/plupload.queue.css);</style>
         <script type="text/javascript" src="http://www.google.com/jsapi"></script>
@@ -238,29 +240,24 @@ if (!$section) $section = "home";
         </script>
     </head>
     <body>
-        <?php
-        // put your code here
-        ?>
         <center>
-            <textarea id="log" style="width: 100%; height: 150px; font-size: 11px" spellcheck="false" wrap="off">
-</textarea>
+            <textarea id="log" style="display: none; width: 100%; height: 150px; font-size: 11px" spellcheck="false" wrap="off"></textarea>
+            <div style="width: 1000px; border: 2px solid #de9d76; background-color: #fff">
 
-        <div style="width: 1000px; border: 1px solid gray;">
 
-           <a href="?section=upload">Upload Content</a><br /><br />
+               <br /><br /><br /><br /><br />
+               <a href="?section=upload">Upload Content</a><br /><br />
 
-            <?php
-            if ($section == "upload") {
-                include("page_upload.php");
-            } else if ($section == "tags") {
-               include("page_tags.php");
-            }
-            ?>
-            <br /><br /><br /><br /><br />
-        </div>
+                <?php
+                if ($section == "upload") {
+                   include("page_upload.php");
+                } else if ($section == "tags") {
+                   include("page_tags.php");
+                }
+                ?>
+               
+                <br /><br /><br /><br /><br />
+            </div>
         </center>
-        
-
-        
     </body>
 </html>
