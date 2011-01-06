@@ -1,0 +1,4 @@
+<Files ~ "\.(inc|sql|rename)$">
+  order allow,deny
+  deny from all
+</Files>
