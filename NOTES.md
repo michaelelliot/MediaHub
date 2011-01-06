@@ -85,6 +85,24 @@ If no search keyword is specified it will default to a "all:" search.
 
 Types of search keywords include:
     all
+    movie
+    year (int)
+    series
+    season (int)
+    episode (int)
+    artist
+    imdb
+    rating (int)
+    actor
+    director
+    producer
+    writer
+    song
+    track
+    genre
+
+The content fields each search keyword relates to is as follows:
+###all
 The all keyword searches the following content fields:
     content.title
     movie.title
@@ -101,11 +119,11 @@ The all keyword searches the following content fields:
     series.name
     episode.title
 
-    movie
+###movie
 The movie keyword searches the following content fields:
     movie.title
 
-    year (int)
+###year (int)
 Depending on the type of search, the year keyword searches the following
 content fields:
     movie.year
@@ -113,29 +131,29 @@ content fields:
     track.year
     series
 
-    season (int)
+###season (int)
 
-    episode (int)
+###episode (int)
 
-    artist
+###artist
 
-    imdb
+###imdb
 
-    rating (int)
+###rating (int)
 
-    actor
+###actor
 
-    director
+###director
 
-    producer
+###producer
 
-    writer
+###writer
 
-    song
+###song
 
-    track
+###track
 
-    genre
+###genre
 
 Types that are integers (int) allow for searches like "year:>2000" or
 "year:<2000". Searching for "year>2000" or "year<2000" is also acceptable.
