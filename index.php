@@ -24,13 +24,23 @@ if (!$section) $section = "home";
 
         <style type="text/css">@import url(css/styles.css);</style>
 
+
+        <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.8.7.custom.min.js"></script>
+
+        <style type="text/css">@import url(css/ui-lightness/jquery-ui-1.8.7.custom.css);</style>
+
         <!-- Load Queue widget CSS and jQuery -->
         <style type="text/css">@import url(plupload/css/plupload.queue.css);</style>
+        <!--
+        
         <script type="text/javascript" src="http://www.google.com/jsapi"></script>
         <script type="text/javascript">
                 google.load("jquery", "1.4.4");
                 google.load("jqueryui", "1.8.7");
         </script>
+        -->
+
         <!-- Load plupload and all it's runtimes and finally the jQuery queue widget -->
         <script type="text/javascript" src="plupload/js/jquery.ui.plupload.min.js"></script>
         <script type="text/javascript" src="plupload/js/plupload.full.min.js"></script>
@@ -39,6 +49,7 @@ if (!$section) $section = "home";
 
         // Convert divs to queue widgets when the DOM is ready
         $(function() {
+
 
 
             function log() {
@@ -228,7 +239,7 @@ if (!$section) $section = "home";
 
         });
         </script>
-	<link type="text/css" rel="stylesheet" href="css/styles.css" />
+	
         <title>MediaHub</title>
         <script type="text/javascript">
 
@@ -241,22 +252,37 @@ if (!$section) $section = "home";
     </head>
     <body>
         <center>
+            
             <textarea id="log" style="display: none; width: 100%; height: 150px; font-size: 11px" spellcheck="false" wrap="off"></textarea>
-            <div style="width: 1000px; border: 2px solid #de9d76; background-color: #fff">
 
+            <div style="width: 1000px; border: 2px solid #f4ce87; border-bottom: 0; text-align: left; background-color: #ffe8a8">
+                <div style="color: #7b6a5d; line-height: 50px; font-size: 15pt; position: relative; padding-left: 15px;">MediaHub Web Manager
+                    <div style="float: right; font-size: 7.5pt; bottom: 0px; position: absolute; right: 0px; padding-right: 15px;">MediaHub <?php echo $config['general']['version'] ?></div>
+                </div>
+            </div>
 
-               <br /><br /><br /><br /><br />
-               <a href="?section=upload">Upload Content</a><br /><br />
+            <div style="width: 1000px; border: 2px solid #f4ce87; background-color: #fff">
 
-                <?php
-                if ($section == "upload") {
-                   include("page_upload.php");
-                } else if ($section == "tags") {
-                   include("page_tags.php");
-                }
-                ?>
-               
-                <br /><br /><br /><br /><br />
+                <div style="text-align: left; padding: 5px; padding-top: 20px;float: left; width: 140px; min-height: 485px; background-color: #fff4d7; border-width: 0 2px 2px 0;border-style: solid; border-color: #f4ce87">
+                    <a href="?section=upload">Upload Content</a><br />
+                    <a href="?section=directory">Content Directory</a><br />
+                </div>
+
+                <div style="padding: 5px; float: left; width: 838px; min-height: 500px; background-color: #fff4d7; border-width: 0 0 2px 0;border-style: solid; border-color: #f4ce87">
+
+                    <?php
+                    if ($section == "upload") {
+                       include("page_upload.php");
+                    } else if ($section == "tags") {
+                       include("page_tags.php");
+                    } else {
+
+                        echo "Unknown section!";
+                    }
+                    ?>
+
+                </div>
+                
             </div>
         </center>
     </body>

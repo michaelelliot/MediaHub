@@ -1,5 +1,5 @@
 <?php
-require_once('includes/sql_db_ex3.inc.php');
+require_once('includes/sql_db/sql_db.inc.php');
 
 global $config;
 
