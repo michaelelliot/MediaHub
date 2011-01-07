@@ -1,13 +1,24 @@
 <?php
-/* 
- * Entry point
- * 
+/*
+  Copyright (C) 2011 thermal
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The Software shall be used for Good, not Evil.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
  */
-
-
-
-
-
 
 include("common.inc.php");
 
@@ -28,6 +39,8 @@ if (!$section) $section = "home";
         <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.8.7.custom.min.js"></script>
 
+        <script type="text/javascript" src="js/jquery.jsonrpc.js"></script>
+                
         <style type="text/css">@import url(css/ui-lightness/jquery-ui-1.8.7.custom.css);</style>
 
         <!-- Load Queue widget CSS and jQuery -->
@@ -261,14 +274,14 @@ if (!$section) $section = "home";
                 </div>
             </div>
 
-            <div style="width: 1000px; border: 2px solid #f4ce87; background-color: #fff">
+            <div style="width: 1000px; border: 2px solid #f4ce87; background-color: #fff; text-align: left;">
 
                 <div style="text-align: left; padding: 5px; padding-top: 20px;float: left; width: 140px; min-height: 485px; background-color: #fff4d7; border-width: 0 2px 2px 0;border-style: solid; border-color: #f4ce87">
                     <a href="?section=upload">Upload Content</a><br />
                     <a href="?section=directory">Content Directory</a><br />
                 </div>
 
-                <div style="padding: 5px; float: left; width: 838px; min-height: 500px; background-color: #fff4d7; border-width: 0 0 2px 0;border-style: solid; border-color: #f4ce87">
+                <div style="padding: 25px; float: left; width: 790px; min-height: 500px; background-color: #fff4d7; border-width: 0 0 2px 0;border-style: solid; border-color: #f4ce87">
 
                     <?php
                     if ($section == "upload") {

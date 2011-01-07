@@ -41,12 +41,34 @@ if (isset($result)) {
     
     if ($result['result'] == "not found") {
         header("Location: page_tags.php?not_found");
+    } else if ($result['result'] == "success") {
+
+        // TODO: Clear all fields
+        // setcookie('meob_*', '') etc.
+
+        $meob = $result['meob'];
+        setcookie('meob_mtag', $meob['mtag']);
+        setcookie('meob_mclass', $meob['mclass']);
+        setcookie('meob_title', $meob['title']);
+        setcookie('meob_year', $meob['year']);
+        setcookie('meob_genres', join(";", $meob['genres']));
+        setcookie('meob_actors', join(";", $meob['actors']));
+        setcookie('meob_directors', join(";", $meob['directors']));
+        setcookie('meob_producers', join(";", $meob['producers']));
+        setcookie('meob_artist', $meob['artist']);
+        setcookie('meob_number', intval($meob['number']));
+        setcookie('meob_duration', intval($meob['duration']));
+        setcookie('meob_production_code', $meob['production_code']);
+        setcookie('meob_ext_imdb_tt', $meob['ext_imdb_tt']);
+        setcookie('meob_ext_imdb_rating', floatval($meob['ext_imdb_rating']));
+        setcookie('meob_ext_rotten_tomatoes_rating', intval($meob['ext_rotten_tomatoes_rating'])); 
+
+        header("Location: index.php?section=tags");
+        exit;
     } else {
-        setcookie('meob_title', $result['title']);
-        setcookie('meob_year', $result['year']);
+        die("Unknown error");
     }
 }
 
-header("Location: index.php?section=tags");
-exit;
+
 ?>

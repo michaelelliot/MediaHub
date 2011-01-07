@@ -17,11 +17,15 @@ eventually be updated by all the MediaHub servers.
 
 ## Glossary
 *Meob*
+
 A meob is a media object. Media objects have a media class which defines
 what the media object is. Examples of media classes include: a movie, a series,
 a series season, a series episode, an album, an album track, a game,
 an application.
 
+*Media class*
+
+The type of media object.
 
 
 ## 1. Content Fields
@@ -35,56 +39,56 @@ Fields referring to duration are stored in seconds.
 ## 1.2 Content Field Names
 
 ### Keys unique (mostly) to this content
-### e.g. torrent.info_hash:abcd
-###      torrent.filename:Torrent_file.torrent
+### e.g. torrent_info_hash:abcd
+###      torrent_filename:Torrent_file.torrent
     content.mkeys[]
 
 ### Fields for all content types
-    content.type
-    content.mtag
-    content.title
-    content.rating (int)
-    publisher.name
-    publisher.url
+    content_type
+    content_mtag
+    content_title
+    content_rating (int)
+    publisher_name
+    publisher_url
 
 ### Fields for movies
-    movie.title
-    movie.year (int)
-    movie.genre[]
-    movie.actor[]
-    movie.director[]
-    movie.producer[]
-    movie.writer[]
+    movie_title
+    movie_year (int)
+    movie_genres[]
+    movie_actors[]
+    movie_directors[]
+    movie_producers[]
+    movie_writers[]
 
 ### Fields for music
-    album.title
-    album.year (int)
-    album.genre[]
-    album.artist
-    track.number (int)
-    track.title
-    track.year (int)
-    track.genre[]
-    track.artist
-    track.duration (int)
+    album_title
+    album_year (int)
+    album_genres[]
+    album_artist
+    track_number (int)
+    track_title
+    track_year (int)
+    track_genres[]
+    track_artist
+    track_duration (int)
 
 ### Fields for series
-    series.name
-    series.genre[]
-    season.number (int)
-    episode.number (int)
-    episode.title
-    episode.production_code
-    episode.duration (int)
+    series_name
+    series_genres[]
+    season_number (int)
+    episode_number (int)
+    episode_title
+    episode_production_code
+    episode_duration (int)
 
 ### Fields for external references or values
-    external.imdb_tt
+    external_imdb_tt
     external imdb_rating (float)
-    external.rotten_tomatoes_rating (int)
+    external_rotten_tomatoes_rating (int)
 
 ### Fields for storing content sources
-    source.btih
-    source.url
+    source_btih
+    source_url
 
 ## 2. Search Keywords
 All searching is done using search keywords. Each keyword refers to a specific
