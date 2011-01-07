@@ -30,19 +30,20 @@ $client  = new jsonRPCClient('http://localhost/MediaTag/src/api/');
 
 try {
     $result = $client->lookup_mkeys(
-            array('torrent.info_hash:' . $info_hash,
-                  'torrent.filename:' . $torrent_filename));
+            array('btih:' . $info_hash,
+                  'filename:' . $torrent_filename));
 } catch(Exception $e) {
     die ("Error: " . $e->getMessage());
 }
-
+//var_dump($result);
+//exit;
 if (isset($result)) {
     
     if ($result['result'] == "not found") {
         header("Location: page_tags.php?not_found");
     } else {
-        setcookie('media.title', $result['title']);
-        setcookie('media.year', $result['year']);
+        setcookie('meob_title', $result['title']);
+        setcookie('meob_year', $result['year']);
     }
 }
 

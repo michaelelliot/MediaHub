@@ -26,7 +26,10 @@
     <div id="content_fields_tabs">
         <ul>
             <li><a href="#tabs-1">Movie</a></li>
-            <li><a href="#tabs-2">Series</a></li>
+            <li><a href="#tabs-2">Series Season</a></li>
+            <li><a href="#tabs-3">Series Episode</a></li>
+            <li><a href="#tabs-3">Album</a></li>
+            <li><a href="#tabs-3">Album Track</a></li>
         </ul>
         <div id="tabs-1">
             <table cellpadding="0" cellspacing="0">

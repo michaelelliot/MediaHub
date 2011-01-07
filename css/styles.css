@@ -46,19 +46,19 @@ div.box {
 }
 
 h2 {
-    font-size: 11pt;
+    font-size: 10pt;
     text-decoration: underline;
     line-height: 10px;
 }
 
 h3 {
-    font-size: 11pt;
+    font-size: 9pt;
     margin-bottom: 10px;
     line-height: 10px;
 }
 
 input[type=button] {
-    width: 200px;
+    width: 150px;
     height: 30px;
     font-family: verdana;
 }
@@ -69,8 +69,11 @@ div.box table {
 div.box table tr td {
     padding: 1px;
 }
+div.box table tr td {
+    width: 100%;
+}
 div.box table tr td.first {
-    width: 75px;
+    width: auto;
     text-align: right;
     padding-right: 10px;
 }
