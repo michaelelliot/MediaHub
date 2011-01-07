@@ -16,7 +16,8 @@ case. The MediaTag entries for silverchair content could be ammended and would
 eventually be updated by all the MediaHub servers.
 
 ## Glossary
-Meob    A meob is a media object. Media objects have a media class which defines
+*Meob*
+A meob is a media object. Media objects have a media class which defines
 what the media object is. Examples of media classes include: a movie, a series,
 a series season, a series episode, an album, an album track, a game,
 an application.
