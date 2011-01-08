@@ -43,7 +43,7 @@
 }
 
 .plupload_container {
-	padding: 8px;
+	padding: 0;
 	background: url('../img/transp50.png');
 	/*-moz-border-radius: 5px;*/
 }
@@ -92,9 +92,10 @@
 	padding: 8px 8px;
 	color: #42454A;
 }
-.plupload_filelist_header {	
+.plupload_filelist_header {
+    /*
 	border-top: 1px solid #EEE;
-	border-bottom: 1px solid #CDCDCD;
+	border-bottom: 1px solid #CDCDCD;*/
 }
 
 .plupload_filelist_footer {border-top: 1px solid #FFF; height: 22px; line-height: 20px; vertical-align: middle;}

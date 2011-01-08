@@ -1,3 +1,8 @@
+/*
+ * TODO: Add checking of id on return and ensure it matches the id sent
+ * TODO: Misc cleanup of code.
+ */
+
 (function($) {
   $.extend({
     jsonRPC: {
@@ -40,7 +45,7 @@
         this._validateRequestCallbacks(callbacks);
 
         // Perform the actual request
-        this._doRequest(JSON.stringify(this._requestDataObj(method, params, 1)),
+        this._doRequest(JSON.stringify(this._requestDataObj(method, params, 1 + jQuery.random(999999 - 1 + 1))),
                         callbacks,
                         url);
 
@@ -61,8 +66,7 @@
         });
         this._validateRequestCallbacks(callbacks);
 
-        var data = [],
-            request;
+        var data = [], request;
 
         // Prepare our request object
         for(var i = 0; i<requests.length; i++) {
@@ -72,7 +76,6 @@
 
         this._doRequest(JSON.stringify(data), callbacks, url);
       },
-
       // Validate a params hash
       _validateConfigParams: function(params) {
         if(typeof(params) === 'undefined') {
@@ -87,13 +90,11 @@
           }
         }
       },
-
       // Request method must be a string
       _validateRequestMethod: function(method) {
         if(typeof(method) !== 'string') throw("Invalid method supplied for jsonRPC request")
         return true;
       },
-
       // Validate request params.  Must be a) empty, b) an object (e.g. {}), or c) an array
       _validateRequestParams: function(params) {
         if(!(params === null ||
@@ -104,7 +105,6 @@
         }
         return true;
       },
-
       _validateRequestCallbacks: function(callbacks) {
         // Make sure callbacks are either empty or a function
         if(typeof(callbacks) !== 'undefined') {
@@ -112,10 +112,12 @@
              typeof(callbacks.error) !== 'function') throw("Invalid error callback supplied for jsonRPC request");
           if(typeof(callbacks.success) !== 'undefined' &&
              typeof(callbacks.success) !== 'function') throw("Invalid success callback supplied for jsonRPC request");
+          if(typeof(callbacks.completed) !== 'undefined' &&
+             typeof(callbacks.completed) !== 'function') throw("Invalid completed callback supplied for jsonRPC request");
+
         }
         return true;
       },
-
       // Internal method used for generic ajax requests
       _doRequest: function(data, callbacks, url) {
         var _that = this;
@@ -135,29 +137,32 @@
           }
         })
       },
-
       // Determines the appropriate request URL to call for a request
       _requestUrl: function(url) {
         url = url || this.endPoint;
         return url + '?tm=' + new Date().getTime()
       },
-
       // Creates an RPC suitable request object
       _requestDataObj: function(method, params, id) {
         return {
           jsonrpc: this.version,
-          method: this.namespace ? this.namespace +'.'+ method : method,
+          method: this.namespace ? this.namespace + '.' + method : method,
           params: params,
           id: id
         }
       },
 
-      // Handles calling of error callback function
-      _requestError: function(callbacks, json) {
-        if (typeof(callbacks) !== 'undefined' && typeof(callbacks.error) === 'function') {
-            callbacks.error(this._response());
-        }
-      },
+        // Handles calling of error callback function
+        _requestError: function(callbacks, json) {
+            if (typeof(callbacks) !== 'undefined') {
+                if (typeof(callbacks.completed) !== 'undefined') {
+                    callbacks.completed ? callbacks.completed(response['result']) : null;
+                }
+                if (typeof(callbacks.error) === 'function') {
+                    callbacks.error(this._response());
+                }
+            }
+        },
 
       // Handles calling of RPC success, calls error callback
       // if the response contains an error
@@ -165,15 +170,19 @@
       _requestSuccess: function(callbacks, json) {
         var response = this._response(json);
 
-        // If we've encountered an error in the response, trigger the error callback if it exists
-        if(response.error && typeof(callbacks) !=='undefined' && typeof(callbacks.error) !== 'undefined') {
-          callbacks.error(response['result']);
-          return;
-        }
-
-        // Otherwise, successful request, run the success request if it exists
-        if(typeof(callbacks) !== 'undefined' && typeof(callbacks.success) !== 'undefined') {
-          callbacks.success ? callbacks.success(response['result']) : null;
+        if(typeof(callbacks) !== 'undefined') {
+            if (typeof(callbacks.completed) !== 'undefined') {
+                callbacks.completed ? callbacks.completed(response['result']) : null;
+            }
+            // If we've encountered an error in the response, trigger the error callback if it exists
+            if(response.error && typeof(callbacks.error) !== 'undefined') {
+              callbacks.error(response['result']);
+              return;
+            }
+            // Otherwise, successful request, run the success request if it exists
+            if(typeof(callbacks.success) !== 'undefined') {
+              callbacks.success ? callbacks.success(response['result']) : null;
+            }
         }
       },
 
@@ -190,12 +199,10 @@
             if(typeof(json) === 'string') {
               json = eval ( '(' + json + ')' );
             }
-
             if (($.isArray(json) && json.length > 0 && json[0].jsonrpc !== '2.0') ||
                 (!$.isArray(json) && json.jsonrpc !== '2.0')) {
               throw 'Version error!';
             }
-
             return json;
           }
           catch (e) {
@@ -206,7 +213,6 @@
           }
         }
       }
-
     }
   });
 })(jQuery);

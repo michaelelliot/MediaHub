@@ -22,7 +22,25 @@ $db_settings['die_message'] = false;
 
 $sql_db = new DB($db_settings);
 
+function clear_cookie_fields() {
+    setcookie('meob_mtag', '');
+    setcookie('meob_mclass', '');
+    setcookie('meob_title', '');
+    setcookie('meob_year', '');;
+    setcookie('meob_genres', '');
+    setcookie('meob_actors', '');
+    setcookie('meob_directors', '');
+    setcookie('meob_producers', '');
+    setcookie('meob_artist', '');
+    setcookie('meob_number', '');
+    setcookie('meob_duration', '');
+    setcookie('meob_production_code', '');
+    setcookie('meob_ext_imdb', '');
+    setcookie('meob_ext_imdb_rating', '');
+    setcookie('meob_ext_rottentomatoes_rating', '');
+    setcookie('content_sources', '');
+    setcookie('mediakeys', '');
 
-
+}
 
 ?>

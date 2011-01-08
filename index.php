@@ -23,7 +23,12 @@
 include("common.inc.php");
 
 $section = @trim(preg_replace("/[^a-z]/i", "", $_REQUEST['section']));
-if (!$section) $section = "home";
+if (!$section) {
+    $section = "home";
+    clear_cookie_fields();
+}
+
+
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -36,11 +41,17 @@ if (!$section) $section = "home";
         <style type="text/css">@import url(css/styles.css);</style>
 
 
+
+
+        
+
         <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.8.7.custom.min.js"></script>
 
         <script type="text/javascript" src="js/jquery.jsonrpc.js"></script>
-                
+        <script type="text/javascript" src="modal-loading/modal-loading.js"></script>
+        <style type="text/css">@import url(modal-loading/styles.css);</style>
+
         <style type="text/css">@import url(css/ui-lightness/jquery-ui-1.8.7.custom.css);</style>
 
         <!-- Load Queue widget CSS and jQuery -->
@@ -249,53 +260,48 @@ if (!$section) $section = "home";
                                 e.preventDefault();
                         }
                 });
-
         });
         </script>
-	
-        <title>MediaHub</title>
+        <title>MediaHub Web Manager</title>
         <script type="text/javascript">
-
-        $(document).ready(function() {
-        });
-
-
-
+            $(function() {
+            });
         </script>
     </head>
     <body>
         <center>
-            
             <textarea id="log" style="display: none; width: 100%; height: 150px; font-size: 11px" spellcheck="false" wrap="off"></textarea>
-
             <div style="width: 1000px; border: 2px solid #f4ce87; border-bottom: 0; text-align: left; background-color: #ffe8a8">
                 <div style="color: #7b6a5d; line-height: 50px; font-size: 15pt; position: relative; padding-left: 15px;">MediaHub Web Manager
                     <div style="float: right; font-size: 7.5pt; bottom: 0px; position: absolute; right: 0px; padding-right: 15px;">MediaHub <?php echo $config['general']['version'] ?></div>
                 </div>
             </div>
-
-            <div style="width: 1000px; border: 2px solid #f4ce87; background-color: #fff; text-align: left;">
-
-                <div style="text-align: left; padding: 5px; padding-top: 20px;float: left; width: 140px; min-height: 485px; background-color: #fff4d7; border-width: 0 2px 2px 0;border-style: solid; border-color: #f4ce87">
-                    <a href="?section=upload">Upload Content</a><br />
-                    <a href="?section=directory">Content Directory</a><br />
-                </div>
-
-                <div style="padding: 25px; float: left; width: 790px; min-height: 500px; background-color: #fff4d7; border-width: 0 0 2px 0;border-style: solid; border-color: #f4ce87">
-
-                    <?php
-                    if ($section == "upload") {
-                       include("page_upload.php");
-                    } else if ($section == "tags") {
-                       include("page_tags.php");
-                    } else {
-
-                        echo "Unknown section!";
-                    }
-                    ?>
-
-                </div>
-                
+            <div class="body">
+                <table cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td valign="top" class="menu">
+                            <ul>
+                                <li><a href="?section=upload">Add Content</a><br /></li>
+                                <li><a href="?section=directory">Content Directory</a><br /></li>
+                            </ul>
+                        </td>
+                        <td valign="top" class="page">
+                            <div class="page">
+                                <?php
+                                if ($section == "upload") {
+                                   include("page_upload.php");
+                                } else if ($section == "tags") {
+                                   include("page_tags.php");
+                                } else if ($section == "home") {
+                                    include("page_home.php");
+                                } else {
+                                    echo "Unknown section!";
+                                }
+                                ?>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </center>
     </body>

@@ -16,17 +16,47 @@ case. The MediaTag entries for silverchair content could be ammended and would
 eventually be updated by all the MediaHub servers.
 
 ## Glossary
-*Meob*
+*Meob or Media Object*
 
 A meob is a media object. Media objects have a media class which defines
 what the media object is. Examples of media classes include: a movie, a series,
-a series season, a series episode, an album, an album track, a game,
-an application.
+a series season, a series episode, an album.
 
-*Media class*
+Every media object or meob has an mtag.
 
-The type of media object.
+*Media Class*
 
+The type of media object. A media class can be one of the following:
+    movie
+    album
+    track
+    series
+    season
+    episode
+    game
+    ebook
+    application
+
+_Media Tag or mtag_
+
+TODO:
+
+_Media Class or mclass_
+
+TODO:
+
+_Content Sources_
+
+A list of sources for the content and what type of instance it is. e.g. feature
+(the main content), sample (a sample of the content), trailer (a trailer of the
+content)
+
+Specified in the following format:
+    instance type,source type,source
+Examples:
+    feature,btih,c389547e7551e9785c4fa87935824a5403d178e8
+    feature,url,test.torrent
+    trailer,url,http://www.youtube.com/xxx
 
 ## 1. Content Fields
 
@@ -54,6 +84,7 @@ Fields referring to duration are stored in seconds.
 ### Fields for movies
     movie_title
     movie_year (int)
+    movie_summary
     movie_genres[]
     movie_actors[]
     movie_directors[]
