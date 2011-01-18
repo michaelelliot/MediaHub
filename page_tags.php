@@ -7,80 +7,17 @@
 $content_sources = @$_COOKIE['content_sources'] or $content_sources = null;
 $mediakeys = @$_COOKIE['mediakeys'] or $mediakeys = null;
 
-
+$mclass = @$_COOKIE['mclass'] or $mclass = "unknown";
+$mtag = @$_COOKIE['mtag'] or $mtag = null;
+$name = @$_COOKIE['name'] or $name = null;
+$year = @$_COOKIE['year'] or $year = null;
+$artist = @$_COOKIE['artist'] or $artist = null;
+$title = @$_COOKIE['title'] or $title = null;
+$bitrate = @$_COOKIE['bitrate'] or $bitrate = null;
 
 ?>
-
 <script type="text/javascript">
 
-    // TODO: Put into a library
-    function print_r(x, max, sep, l) {
-
-	l = l || 0;
-	max = max || 10;
-	sep = sep || ' ';
-
-	if (l > max) {
-            return "[WARNING: Too much recursion]\n";
-	}
-
-	var
-        i,
-        r = '',
-        t = typeof x,
-        tab = '';
-
-	if (x === null) {
-            r += "(null)\n";
-	} else if (t == 'object') {
-
-            l++;
-
-            for (i = 0; i < l; i++) {
-                tab += sep;
-            }
-
-            if (x && x.length) {
-                t = 'array';
-            }
-
-            r += '(' + t + ") :\n";
-
-            for (i in x) {
-                try {
-                    r += tab + '[' + i + '] : ' + print_r(x[i], max, sep, (l + 1));
-                } catch(e) {
-                    return "[ERROR: " + e + "]\n";
-                }
-            }
-
-	} else {
-
-            if (t == 'string') {
-                if (x == '') {
-                    x = '(empty)';
-                }
-            }
-
-            r += '(' + t + ') ' + x + "\n";
-
-	}
-
-	return r;
-
-    };
-    var_dump = print_r;
-
-
-    // TODO: Put into a library
-    jQuery.extend({
-        random: function(X) {
-            return Math.floor(X * (Math.random() % 1));
-        },
-        randomBetween: function(MinV, MaxV) {
-            return MinV + jQuery.random(MaxV - MinV + 1);
-        }
-    });
 
     // Process incoming meob fields from a lookup
     function process_meob_fields(meob) {
@@ -101,7 +38,22 @@ $mediakeys = @$_COOKIE['mediakeys'] or $mediakeys = null;
                     if (typeof meob['ext_imdb'] != 'undefined') {
                         if ($('#media_keys').val().indexOf('imdb:') == -1) $('#media_keys').append('imdb:' + meob['ext_imdb'] + "\n");
                     }
+                    $('#content_fields_tabs').tabs().tabs('select', '#tabs-movie');
                     break;
+
+            switch(meob['mclass'].toLowerCase()) {
+                case 'movie':
+                    if (typeof meob['title'] != 'undefined') $('#album_title').val(meob['title']);
+                    if (typeof meob['year'] != 'undefined') $('#album_year').val(meob['year']);
+                    if (typeof meob['artist'] != 'undefined') $('#album_artist').val(meob['artist']);
+                    if (typeof meob['total_tracks'] != 'undefined') $('#album_total_tracks').val(meob['album_total_tracks']);
+                    if (typeof meob['total_duration'] != 'undefined') $('#album_total_duration').val(meob['album_total_duration']);
+                    if (typeof meob['release_date'] != 'undefined') $('#album_release_date').val(meob['album_release_date']);
+                    if (typeof meob['label'] != 'undefined') $('#album_label').val(meob['album_label']);
+
+                    $('#content_fields_tabs').tabs().tabs('select', '#tabs-album');
+                    break;
+            }
 
                 default:
                     alert("Error: Unknown media class");
@@ -113,10 +65,57 @@ $mediakeys = @$_COOKIE['mediakeys'] or $mediakeys = null;
     }
 
   
+    $('#save').click(function() {
+        
+       if ($('#mtag').val() == "") throw("Invalid mtag entered");
+       if ($('#mclass').val() == "unknown") throw("Must select an mclass");
 
+       // TODO: ...
+        
+    });
+
+    // Validate that an mtag is valid
+    // Returns true if valid
+    function validate_mtag(mtag) {
+        if (!mtag) return false;
+        return true;
+    }
     // On document ready
     $(function() {
+
+        $('#mclass').val('<?php echo $mclass ?>');
+
+        
+        //$('#movie_year').val ('');
+        // TODO: Set all year fields
+
+        // TODO: Set bitrate field
+        
+
+        // TODO: Figure out if going to keep this
+        switch($('#mclass').val()) {
+            case 'movie':
+                <?php if ($year) echo "$('#movie_year').val ('" . $year . "');"; ?>
+                <?php if ($title) echo "$('#movie_title').val ('" . $title . "');"; ?>
+                $('#content_fields_tabs').tabs().tabs('select', '#tabs-movie');
+                break;
+            case 'album':
+                <?php if ($title) echo "$('#album_title').val ('" . $title . "');"; ?>
+                <?php if ($year) echo "$('#album_year').val ('" . $year . "');"; ?>
+                <?php if ($artist) echo "$('#album_artist').val ('" . $artist . "');"; ?>
+                $('#content_fields_tabs').tabs().tabs('select', '#tabs-album');
+                break;
+            case 'track':
+
+        }
+
+
         $('#lookup_mtag').bind('click', function() {
+
+            if (!validate_mtag($('#mtag').val())) {
+                alert("Invalid mtag entered.");
+                return;
+            }
             showLightbox();
             $.jsonRPC.setup({
                 endPoint: 'http://localhost/MediaTag/src/api/',
@@ -130,7 +129,8 @@ $mediakeys = @$_COOKIE['mediakeys'] or $mediakeys = null;
                     }
                 },
                 error: function(result) {
-                    alert("Error: " + result['result']);
+                    alert("RPC Error" + var_dump(result));
+                    //alert("Error: " + result['result']);
                 },
                 completed: function(result) {
                     hideLightbox();
@@ -140,12 +140,20 @@ $mediakeys = @$_COOKIE['mediakeys'] or $mediakeys = null;
         });
 
         $('#lookup_mkeys').bind('click', function() {
+            
+            mclass = $('#mclass').val();
+            if (mclass != 'unknown') {
+               params = [{'mclass' : mclass}, {'mkeys' : ["btih:c389547e7551e9785c4fa87935824a5403d178e8","filename:test.torrent"] }];
+            } else {
+                params = [{'mkeys' : ["btih:c389547e7551e9785c4fa87935824a5403d178e8","filename:test.torrent"] }];
+            }
+            
             showLightbox();
             $.jsonRPC.setup({
                 endPoint: 'http://localhost/MediaTag/src/api/',
                 namespace: ''
             });
-            $.jsonRPC.request('lookup_mkeys', [["btih:c389547e7551e9785c4fa87935824a5403d178e8","filename:test.torrent"]], {
+            $.jsonRPC.request('lookup_mkeys', params, {
                 success: function(result) {
                     if (result['result'].toLowerCase() == 'success') {
                         meob = result['meob'];
@@ -172,7 +180,7 @@ $mediakeys = @$_COOKIE['mediakeys'] or $mediakeys = null;
             <td class="first">mClass:</td>
             <td>
                 <select id="mclass" name="mclass" style="width: 100px;">
-                    <option value="detect">Detect</option>
+                    <option value="unknown">Unknown</option>
                     <option value="movie">Movie</option>
                     <option value="album">Album</option>
                     <option value="track">Track</option>
@@ -207,13 +215,13 @@ $mediakeys = @$_COOKIE['mediakeys'] or $mediakeys = null;
     <h2>Content Fields</h2>
     <div id="content_fields_tabs">
         <ul>
-            <li><a href="#tabs-1">Movie</a></li>
-            <li><a href="#tabs-2">Series Season</a></li>
-            <li><a href="#tabs-3">Series Episode</a></li>
-            <li><a href="#tabs-3">Album</a></li>
-            <li><a href="#tabs-3">Album Track</a></li>
+            <li><a href="#tabs-movie">Movie</a></li>
+            <li><a href="#tabs-album">Album</a></li>
+            <li><a href="#">Series Season</a></li>
+            <li><a href="#">Series Episode</a></li>
+            <li><a href="#">Album Track</a></li>
         </ul>
-        <div id="tabs-1">
+        <div id="tabs-movie">
             <table cellpadding="0" cellspacing="0">
                 <tr><td class="first">Title:</td><td><input id="movie_title" name="movie_title" type="text" value="" /></td></tr>
                 <tr><td class="first">Year:</td><td><input id="movie_year" name="movie_year" type="number" value="" /></td>
@@ -228,7 +236,25 @@ $mediakeys = @$_COOKIE['mediakeys'] or $mediakeys = null;
                 Note: Fields with multiple entries are separated by a semi-colon (;)
             </div>
         </div>
-        <div id="tabs-2">
+
+        <div id="tabs-album">
+            <table cellpadding="0" cellspacing="0">
+                <tr><td class="first">Artist:</td><td><input id="album_artist" name="album_artist" type="text" value="" /></td>
+                <tr><td class="first">Title:</td><td><input id="album_title" name="album_title" type="text" value="" /></td></tr>
+                <tr><td class="first">Year:</td><td><input id="album_year" name="album_year" type="number" value="" /></td>
+                <tr><td class="first">Genres:</td><td><input id="album_genres" name="album_genres" type="text" value="" /></td>
+                <tr><td class="first">Total Tracks:</td><td><input id="album_total_tracks" name="album_total_tracks" type="number" value="" /></td>
+                <tr><td class="first">Total Duration:</td><td><input id="album_total_duration" name="album_total_duration" type="number" value="" /></td>
+                <tr><td class="first">Label:</td><td><input id="album_label" name="album_label" type="text" value="" /></td>
+                <tr><td class="first">Release Date:</td><td><input id="album_release_date" named="album_release_date" type="text" value="" /></td>
+            </table>
+        
+            <div class="note">
+                Note: Fields with multiple entries are separated by a semi-colon (;)
+            </div>
+        </div>
+
+        <div id="">
             <!-- TODO: -->
         </div>
     </div>

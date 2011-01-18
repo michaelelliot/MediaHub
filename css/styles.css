@@ -2,8 +2,10 @@
 
 body {
 	margin: 0;
-	font: 15px verdana,serif;
         background-color: #dbdbdb
+}
+body, p {
+    font: 14px verdana,serif;
 }
 
 input[type=text] {

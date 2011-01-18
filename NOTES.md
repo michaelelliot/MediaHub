@@ -27,15 +27,15 @@ Every media object or meob has an mtag.
 *Media Class*
 
 The type of media object. A media class can be one of the following:
-    movie
-    album
-    track
-    series
-    season
-    episode
-    game
-    ebook
-    application
+* movie
+* album
+* track
+* series
+* season
+* episode
+* game
+* ebook
+* application
 
 _Media Tag or mtag_
 
@@ -47,16 +47,19 @@ TODO:
 
 _Content Sources_
 
-A list of sources for the content and what type of instance it is. e.g. feature
-(the main content), sample (a sample of the content), trailer (a trailer of the
-content)
+A list of sources for the content, the type of source (e.g. url, btih) and its
+relation to the content (e.g. feature, trailer, sample, screenshot).
 
-Specified in the following format:
-    instance type,source type,source
-Examples:
-    feature,btih,c389547e7551e9785c4fa87935824a5403d178e8
-    feature,url,test.torrent
-    trailer,url,http://www.youtube.com/xxx
+The content sources are specified using a CSS-like syntax. For example:
+* relation: feature; source: btih(c389547e7551e9785c4fa87935824a5403d178e8);
+* relation: trailer; source: url(http://www.youtube.com/xxx);
+
+Types of relation:
+* feature
+* trailer
+* sample
+* screenshot
+* music-video
 
 ## 1. Content Fields
 
@@ -71,55 +74,52 @@ Fields referring to duration are stored in seconds.
 ### Keys unique (mostly) to this content
 ### e.g. torrent_info_hash:abcd
 ###      torrent_filename:Torrent_file.torrent
-    content.mkeys[]
+* content.mkeys[]
 
 ### Fields for all content types
-    content_type
-    content_mtag
-    content_title
-    content_rating (int)
-    publisher_name
-    publisher_url
+* mtag
+* mclass
+* publisher_name
+* publisher_url
 
 ### Fields for movies
-    movie_title
-    movie_year (int)
-    movie_summary
-    movie_genres[]
-    movie_actors[]
-    movie_directors[]
-    movie_producers[]
-    movie_writers[]
+* movie_title
+* movie_year (int)
+* movie_summary
+* movie_genres[]
+* movie_actors[]
+* movie_directors[]
+* movie_producers[]
+* movie_writers[]
 
 ### Fields for music
-    album_title
-    album_year (int)
-    album_genres[]
-    album_artist
-    track_number (int)
-    track_title
-    track_year (int)
-    track_genres[]
-    track_artist
-    track_duration (int)
+* album_title
+* album_year (int)
+* total_tracks
+* total_duration
+* album_genres[]
+* album_artist
+* track_number (int)
+* track_title
+* track_year (int)
+* track_genres[]
+* track_artist
+* track_duration (int)
 
 ### Fields for series
-    series_name
-    series_genres[]
-    season_number (int)
-    episode_number (int)
-    episode_title
-    episode_production_code
-    episode_duration (int)
+* series_name
+* series_genres[]
+* season_number (int)
+* episode_number (int)
+* episode_title
+* episode_production_code
+* episode_duration (int)
 
 ### Fields for external references or values
-    external_imdb_tt
-    external imdb_rating (float)
-    external_rotten_tomatoes_rating (int)
+* external_imdb_tt
+* external imdb_rating (float)
+* external_rotten_tomatoes_rating (int)
 
-### Fields for storing content sources
-    source_btih
-    source_url
 
 ## 2. Search Keywords
 All searching is done using search keywords. Each keyword refers to a specific
@@ -127,52 +127,54 @@ field to search. e.g.: "year:2001" would search for content with a year of 2001.
 If no search keyword is specified it will default to a "all:" search.
 
 Types of search keywords include:
-    all
-    movie
-    year (int)
-    series
-    season (int)
-    episode (int)
-    artist
-    imdb
-    rating (int)
-    actor
-    director
-    producer
-    writer
-    song
-    track
-    genre
+* all
+* movie
+* year (int)
+* series
+* season (int)
+* episode (int)
+* artist
+* imdb
+* rating (int)
+* actor
+* director
+* producer
+* writer
+* song
+* track
+* genre
+
+* bitrate:
 
 The content fields each search keyword relates to is as follows:
 ###all
 The all keyword searches the following content fields:
-    content.title
-    movie.title
-    movie.actor[]
-    movie.director[]
-    movie.producer[]
-    movie.writer[]
-    album.title
-    album.genre[]
-    album.artist
-    track.title
-    track.genre[]
-    track.artist
-    series.name
-    episode.title
+* content.title
+* movie.title
+* movie.actor[]
+* movie.director[]
+* movie.producer[]
+* movie.writer[]
+* album.title
+* album.genre[]
+* album.artist
+* track.title
+* track.genre[]
+* track.artist
+* series.name
+* episode.title
 
 ###movie
 The movie keyword searches the following content fields:
-    movie.title
+* movie.title
 
 ###year (int)
 Depending on the type of search, the year keyword searches the following
 content fields:
-    movie.year
-    album.year
-    track.year
-    series
+* movie.year
+* album.year
+* track.year
+* series
 
 ###season (int)
 

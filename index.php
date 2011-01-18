@@ -27,9 +27,6 @@ if (!$section) {
     $section = "home";
     clear_cookie_fields();
 }
-
-
-
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -69,6 +66,7 @@ if (!$section) {
         <script type="text/javascript" src="plupload/js/jquery.ui.plupload.min.js"></script>
         <script type="text/javascript" src="plupload/js/plupload.full.min.js"></script>
         <script type="text/javascript" src="plupload/js/jquery.plupload.queue.min.js"></script>
+        <script type="text/javascript" src="js/mediahub.js"></script>
         <script type="text/javascript">
 
         // Convert divs to queue widgets when the DOM is ready

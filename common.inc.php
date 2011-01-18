@@ -42,5 +42,7 @@ function clear_cookie_fields() {
     setcookie('mediakeys', '');
 
 }
-
+function json_sanitize($json) {
+    return preg_replace("/('|\")/", "\\\\$1", $json);
+}
 ?>

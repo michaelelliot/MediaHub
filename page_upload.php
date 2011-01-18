@@ -26,4 +26,5 @@
             </div>
         </div>
     </form>
+    <p>Drag and drop the torrent file of the content into the container above.</p>
 </div>

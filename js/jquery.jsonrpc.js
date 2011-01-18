@@ -4,6 +4,7 @@
  */
 
 (function($) {
+    
   $.extend({
     jsonRPC: {
       // RPC Version Number
@@ -45,7 +46,7 @@
         this._validateRequestCallbacks(callbacks);
 
         // Perform the actual request
-        this._doRequest(JSON.stringify(this._requestDataObj(method, params, 1 + jQuery.random(999999 - 1 + 1))),
+        this._doRequest(JSON.stringify(this._requestDataObj(method, params, 1 + (Math.floor((999999 - 1 + 1) * (Math.random() % 1))))),
                         callbacks,
                         url);
 
@@ -130,6 +131,7 @@
           cache: false,
           processData: false,
           error: function(json) {
+              alert("ffs1");
             _that._requestError.call(_that, callbacks, json);
           },
           success: function(json) {
@@ -154,9 +156,10 @@
 
         // Handles calling of error callback function
         _requestError: function(callbacks, json) {
+alert("ffs2");
             if (typeof(callbacks) !== 'undefined') {
                 if (typeof(callbacks.completed) !== 'undefined') {
-                    callbacks.completed ? callbacks.completed(response['result']) : null;
+                    callbacks.completed ? callbacks.completed(this._response()) : null;
                 }
                 if (typeof(callbacks.error) === 'function') {
                     callbacks.error(this._response());
@@ -176,7 +179,8 @@
             }
             // If we've encountered an error in the response, trigger the error callback if it exists
             if(response.error && typeof(callbacks.error) !== 'undefined') {
-              callbacks.error(response['result']);
+                alert("ffs3");
+              callbacks.error(response['error']);
               return;
             }
             // Otherwise, successful request, run the success request if it exists
