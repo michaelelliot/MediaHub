@@ -1,4 +1,4 @@
-<Files ~ "\.(inc|sql|rename)$">
+<Files ~ "\.(inc|sql|rename|ini)$">
   order allow,deny
   deny from all
 </Files>
