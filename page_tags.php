@@ -59,17 +59,15 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
             // Ensure not already in field
             if (typeof meob['mkeys'] != 'undefined') {
                 $(meob['mkeys']).each(function(i, e) {
-                        if ($('#mkeys').val().indexOf(e) == -1) {
-                            // Note: a.append was playing up
-                            $('#mkeys').val($('#mkeys').val() + e + "\n")
-                            
-                        }
-                    });
+                    // Note: .apppend() was playing up
+                    if ($('#mkeys').val().indexOf(e) == -1) $('#mkeys').val($('#mkeys').val() + e + "\n")
+                });
             }
+
             if (typeof meob['source'] != 'undefined') {
                 $(meob['source']).each(function(i, e) {
-                        if ($('#source').val().indexOf(e) == -1) $('#source').append(e + "\n");
-                    });
+                    if ($('#source').val().indexOf(e) == -1) $('#source').val($('#source').val() + e + "\n")
+                });
             }
 
             switch(meob['mclass'].toLowerCase()) {
@@ -86,10 +84,9 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
                     if (typeof meob['release_date'] != 'undefined') $('#movie_release_date').val(meob['release_date']);
                     if (typeof meob['classification'] != 'undefined') $('#movie_classification').val(meob['classification']);
                     if (typeof meob['imdb_tt'] != 'undefined') {
-                        if (typeof meob['imdb_tt'] != 'undefined') $('#movie_imdb_tt').val(meob['imdb_tt']);
-
+                        $('#movie_imdb_tt').val(meob['imdb_tt']);
                         // Add imdb_tt to mkeys
-                       //if ($('#mkeys').val().indexOf('imdb:') == -1) $('#mkeys').append('imdb:' + meob['imdb_tt'] + "\n");
+                       if ($('#mkeys').val().indexOf('imdb:') == -1) $('#mkeys').val($('#mkeys').val() + 'imdb:' + meob['imdb_tt'] + "\n");
                     }
                     if (typeof meob['imdb_rating'] != 'undefined') $('#movie_imdb_rating').val(meob['imdb_rating']);
                     $('#content_fields_tabs').tabs().tabs('select', '#tabs-movie');
@@ -138,8 +135,8 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
         <?php
         if (isset($_SESSION['mclass'])) echo "$('#mclass').val ('{$_SESSION['mclass']}');";
         if (isset($_SESSION['mtag'])) echo "$('#mtag').val ('{$_SESSION['mtag']}');";
-        if (isset($_SESSION['sources'])) echo "$('#sources').val ('" . json_sanitize(preg_replace("/[\r\n|\n|\r]/", "\\n", $_SESSION['sources'])) . "');";
-        if (isset($_SESSION['mkeys'])) echo "$('#mkeys').val ('" . json_sanitize(preg_replace("/[\r\n|\n|\r]/", "\\n", $_SESSION['mkeys'])) . "');";
+        if (isset($_SESSION['sources'])) echo "$('#sources').val ('" . trim(json_sanitize(preg_replace("/[\r\n|\n|\r]/", "\\n", $_SESSION['sources']))) . "\\n');";
+        if (isset($_SESSION['mkeys'])) echo "$('#mkeys').val ('" . trim(json_sanitize(preg_replace("/[\r\n|\n|\r]/", "\\n", $_SESSION['mkeys']))) . "\\n');";
         ?>
         switch($('#mclass').val()) {
             case 'movie':
@@ -200,7 +197,7 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
                 },
                 error: function(result) {
                     //alert("RPC Error" + var_dump(result));
-                    add_message('<span class="failure"><span class="success">RPC Error: ' + var_dump(result) + '</span>');
+                    add_message('<span class="failure">RPC Error: ' + var_dump(result) + '</span>');
                 },
                 completed: function(result) {
                     hideLightbox();
@@ -213,10 +210,15 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
             
             mclass = $('#mclass').val();
             if (mclass != 'unknown') {
-               params = [{'mclass' : mclass}, {'mkeys' : ["btih:c389547e7551e9785c4fa87935824a5403d178e8","filename:test.torrent"] }];
+              params = [{'mclass' : mclass, 'mkeys' : $.trim($('#mkeys').val()).split('\n')}];
+
             } else {
-                params = [{'mkeys' : ["btih:c389547e7551e9785c4fa87935824a5403d178e8","filename:test.torrent"] }];
+               params = [{'mkeys' : $('#mkeys').val().split('\n') }];
             }
+            //alert(print_r(params));
+            clear_fields();
+            clear_messages();
+            add_message('Looking up mkeys...');
             showLightbox();
             $.jsonRPC.setup({
                 endPoint: 'http://localhost/MediaTag/src/api/',
@@ -227,11 +229,15 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
                     if (result['result'].toLowerCase() == 'success') {
                         meob = result['meob'];
                         process_meob_fields(meob);
+                        add_message('<span class="success">Successfully matched mkey</span> (' + result['mkey'] + ') <span class="success">with media object.</span>');
+                    } else {
+                        add_message('<span class="failure">Couldn\'t match mkeys</span>');
                     }
                     hideLightbox();
                 },
                 error: function(result) {
-                    alert("Error: " + result['result']);
+                    //alert("Error: " + result['result']);
+                    add_message('<span class="failure">Error: ' + result['error'] + '</span>');
                 },
                 completed: function(result) {
                     hideLightbox();
@@ -285,7 +291,7 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
         </div>
         <div id="tabs-top-2">
             <textarea id="mkeys" class="nowrap"></textarea>
-            <div align="right" style="padding-top: 5px;"><input id="add_mkey" type="button" value="Add Key" />&nbsp;<input id="lookup_mkeys" type="button" value="Lookup" /></div>
+            <div align="right" style="padding-top: 5px;"><!-- <input id="add_mkey" type="button" value="Add Key" />&nbsp; --><input id="lookup_mkeys" type="button" value="Lookup" /></div>
         </div>
     </div>
 </div>

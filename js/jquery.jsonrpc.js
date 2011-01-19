@@ -131,7 +131,7 @@
           cache: false,
           processData: false,
           error: function(json) {
-              alert("ffs1");
+          
             _that._requestError.call(_that, callbacks, json);
           },
           success: function(json) {
@@ -156,12 +156,15 @@
 
         // Handles calling of error callback function
         _requestError: function(callbacks, json) {
-alert("ffs2");
             if (typeof(callbacks) !== 'undefined') {
                 if (typeof(callbacks.completed) !== 'undefined') {
                     callbacks.completed ? callbacks.completed(this._response()) : null;
                 }
                 if (typeof(callbacks.error) === 'function') {
+                        alert("ffs1" + json);alert(print_r(json));
+
+          
+
                     callbacks.error(this._response());
                 }
             }
@@ -179,7 +182,8 @@ alert("ffs2");
             }
             // If we've encountered an error in the response, trigger the error callback if it exists
             if(response.error && typeof(callbacks.error) !== 'undefined') {
-                alert("ffs3");
+                
+
               callbacks.error(response['error']);
               return;
             }
@@ -194,7 +198,7 @@ alert("ffs2");
       _response: function(json) {
         if (typeof(json) === 'undefined') {
           return {
-            error: 'Internal server error',
+            error: 'Internal server error 1',
             version: '2.0'
           };
         }

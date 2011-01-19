@@ -188,8 +188,8 @@ if (isset($result)) {
             }
         }
 
-        // TODO: Uncomment this line
-        $_SESSION['sources'] = "feature: btih(" . $info_hash . ");\ntrailer: url(http://www.youtube.com/watch?v=UM5yepZ21pI) in-browser;\n";
+        // TODO: Uncomment this line?
+        $_SESSION['sources'] = "feature: btih(" . $info_hash . ");\ntrailer: url(http://www.youtube.com/watch?v=XXX) in-browser;";
 
         $_SESSION['mkeys'] = join("\n", $mkeys);
         header("Location: index.php?section=tags");
