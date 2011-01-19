@@ -1,11 +1,30 @@
 <?php
 /*
+  Copyright (C) 2011 thermal
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The Software shall be used for Good, not Evil.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+ */
+/*
  * uploader_0_tmpname e.g. p15l8898k11a20c2612sv1jri11431.jpg
  * uploader_0_name	e.g. tumblr_lcvaneL4DT1qf6ccbo1_500.jpg
  * uploader_0_status e.g. done
  * uploader_count e.g. 1
-  */
-
+ */
 require_once('includes/json-rpc/jsonRPCClient.php');
 include("includes/bencode/bencode.php");
 include("common.inc.php");
@@ -52,7 +71,6 @@ if (@$_REQUEST['mclass'] == "detect") {
         case "mp4":
         case "mkv":
         case "wmv":
-
             # Probably an episode
             if (preg_match("/(^[0-9]{1,3}[\.]  | [0-9]{1,2}x[0-9]{1,3} | [0-9]{3} | s[0-9]{1,2} ?e[0-9]{1,3} )/i", $largest_filename)) {
                 $mclass = "episode";
@@ -68,7 +86,6 @@ if (@$_REQUEST['mclass'] == "detect") {
         case "wav":
         case "flac":
         case "wma":
-
             # If only 1, probably a track
             if (isset($filetype_count[$largest_filetype])) {
                 if ($filetype_count[$largest_filetype] == 1) {
@@ -187,8 +204,8 @@ if (isset($result)) {
                 $_SESSION[$key] = $val;
             }
         }
-
         // TODO: Uncomment this line?
+        // This is a suggestion
         $_SESSION['sources'] = "feature: btih(" . $info_hash . ");\ntrailer: url(http://www.youtube.com/watch?v=XXX) in-browser;";
 
         $_SESSION['mkeys'] = join("\n", $mkeys);
