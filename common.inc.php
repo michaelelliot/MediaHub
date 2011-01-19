@@ -45,4 +45,7 @@ function clear_cookie_fields() {
 function json_sanitize($json) {
     return preg_replace("/('|\")/", "\\\\$1", $json);
 }
+function sanitize_search_term($t) {
+    return preg_replace("/[^a-z0-9'!@#\$%^&\*\(\):,\. ]/i", '', $t);
+}
 ?>

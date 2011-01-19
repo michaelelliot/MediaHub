@@ -74,31 +74,43 @@ Fields referring to duration are stored in seconds.
 ### Keys unique (mostly) to this content
 ### e.g. torrent_info_hash:abcd
 ###      torrent_filename:Torrent_file.torrent
-* content.mkeys[]
+* mkeys[]
 
-### Fields for all content types
+### Global fields
 * mtag
 * mclass
+
+### Publisher fields
 * publisher_name
 * publisher_url
 
-### Fields for movies
-* movie_title
-* movie_year (int)
-* movie_summary
-* movie_genres[]
-* movie_actors[]
-* movie_directors[]
-* movie_producers[]
-* movie_writers[]
+### Movie fields
+* title
+* year (int)
+* runtime
+* plot
+* tagline
+* release_date
+* classification
+* genres[]
+* actors[]
+* directors[]
+* writers[]
 
-### Fields for music
-* album_title
-* album_year (int)
+### Album fields
+* title
+* year (int)
 * total_tracks
 * total_duration
-* album_genres[]
-* album_artist
+* genres[]
+* artists[]
+
+### Extraneous fields
+* imdb_tt
+* imdb_rating (float)
+* rotten_tomatoes_rating (int)
+
+<!--
 * track_number (int)
 * track_title
 * track_year (int)
@@ -120,6 +132,7 @@ Fields referring to duration are stored in seconds.
 * external imdb_rating (float)
 * external_rotten_tomatoes_rating (int)
 
+-->
 
 ## 2. Search Keywords
 All searching is done using search keywords. Each keyword refers to a specific

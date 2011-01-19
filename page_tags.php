@@ -1,20 +1,19 @@
 <?php
 
-//echo "<pre align='left'>";
-//var_dump($_COOKIE);
-//echo "</pre>";
+$sources = @$_SESSION['sources'] or $sources = null;
+$mkeys = @$_SESSION['mkeys'] or $mkeys = null;
+$mclass = @$_SESSION['mclass'] or $mclass = "unknown";
+$mtag = @$_SESSION['mtag'] or $mtag = null;
+$name = @$_SESSION['name'] or $name = null;
+$year = @$_SESSION['year'] or $year = null;
+$artist = @$_SESSION['artist'] or $artist = null;
+$title = @$_SESSION['title'] or $title = null;
+$bitrate = @$_SESSION['bitrate'] or $bitrate = null;
 
-$content_sources = @$_COOKIE['content_sources'] or $content_sources = null;
-$mediakeys = @$_COOKIE['mediakeys'] or $mediakeys = null;
-
-$mclass = @$_COOKIE['mclass'] or $mclass = "unknown";
-$mtag = @$_COOKIE['mtag'] or $mtag = null;
-$name = @$_COOKIE['name'] or $name = null;
-$year = @$_COOKIE['year'] or $year = null;
-$artist = @$_COOKIE['artist'] or $artist = null;
-$title = @$_COOKIE['title'] or $title = null;
-$bitrate = @$_COOKIE['bitrate'] or $bitrate = null;
-
+if (@$_SESSION['foundvia'] == 'mkeys') {
+    $messages[] = "Content class is <b>$mclass.</b>";
+    $messages[] = "Matched to a media object (mtag <b>$mtag</b>) using mkeys.";
+}
 ?>
 <script type="text/javascript">
 
@@ -29,18 +28,24 @@ $bitrate = @$_COOKIE['bitrate'] or $bitrate = null;
                 case 'movie':
                     if (typeof meob['title'] != 'undefined') $('#movie_title').val(meob['title']);
                     if (typeof meob['year'] != 'undefined') $('#movie_year').val(meob['year']);
-                    if (typeof meob['summary'] != 'undefined') $('#movie_summary').val(meob['summary']);
+                    if (typeof meob['plot'] != 'undefined') $('#movie_plot').val(meob['plot']);
+                    if (typeof meob['tagline'] != 'undefined') $('#movie_tagline').val(meob['tagline']);
                     if (typeof meob['genres'] != 'undefined') $('#movie_genres').val(meob['genres'].join(';'));
                     if (typeof meob['actors'] != 'undefined') $('#movie_actors').val(meob['actors'].join(';'));
-                    if (typeof meob['directors'] != 'undefined') $('#movie_directors').val(meob['directors'].join(';'));
-                    if (typeof meob['producers'] != 'undefined') $('#movie_producers').val(meob['producers'].join(';'));
+                    if (typeof meob['directors'] != 'undefined') $('#movie_directors').val(meob['directors'].join('; '));
                     if (typeof meob['writers'] != 'undefined') $('#movie_writers').val(meob['writers'].join(';'));
-                    if (typeof meob['ext_imdb'] != 'undefined') {
-                        if ($('#media_keys').val().indexOf('imdb:') == -1) $('#media_keys').append('imdb:' + meob['ext_imdb'] + "\n");
+                    if (typeof meob['runtime'] != 'undefined') $('#movie_runtime').val(meob['runtime']);
+                    if (typeof meob['release_date'] != 'undefined') $('#movie_release_date').val(meob['release_date']);
+                    if (typeof meob['classification'] != 'undefined') $('#movie_classification').val(meob['classification']);
+                    if (typeof meob['imdb_tt'] != 'undefined') {
+                        // Add imdb_tt to mkeys
+                        if ($('#media_keys').val().indexOf('imdb:') == -1) $('#media_keys').append('imdb:' + meob['imdb_tt'] + "\n");
+                        if (typeof meob['imdb_tt'] != 'undefined') $('#movie_imdb_tt').val(meob['imdb_tt']);
                     }
+                    if (typeof meob['imdb_rating'] != 'undefined') $('#movie_imdb_rating').val(meob['imdb_rating']);
                     $('#content_fields_tabs').tabs().tabs('select', '#tabs-movie');
                     break;
-
+/*
             switch(meob['mclass'].toLowerCase()) {
                 case 'movie':
                     if (typeof meob['title'] != 'undefined') $('#album_title').val(meob['title']);
@@ -53,7 +58,7 @@ $bitrate = @$_COOKIE['bitrate'] or $bitrate = null;
 
                     $('#content_fields_tabs').tabs().tabs('select', '#tabs-album');
                     break;
-            }
+            }*/
 
                 default:
                     alert("Error: Unknown media class");
@@ -97,6 +102,7 @@ $bitrate = @$_COOKIE['bitrate'] or $bitrate = null;
             case 'movie':
                 <?php if ($year) echo "$('#movie_year').val ('" . $year . "');"; ?>
                 <?php if ($title) echo "$('#movie_title').val ('" . $title . "');"; ?>
+                    
                 $('#content_fields_tabs').tabs().tabs('select', '#tabs-movie');
                 break;
             case 'album':
@@ -171,13 +177,22 @@ $bitrate = @$_COOKIE['bitrate'] or $bitrate = null;
         });
      });
 </script>
-<h1>Add Content</h1>
+
+<ul class="messages">
+    <?php
+        if (count($messages)) {
+            foreach($messages as $m) {
+                print "<li>$m</li>";
+            }
+        }
+    ?>
+</ul>
+
 <div class="box">
     <h2>MediaTag Fields</h2>
     <table cellpadding="0" cellspacing="0">
-        <tr><td class="first">mTag:</td><td><input id="mtag" name="mtag" type="text" value="" /></td><td><input id="lookup_mtag" type="button" value="Lookup" /></td></tr>
         <tr>
-            <td class="first">mClass:</td>
+            <td class="first">mclass:</td>
             <td>
                 <select id="mclass" name="mclass" style="width: 100px;">
                     <option value="unknown">Unknown</option>
@@ -190,22 +205,23 @@ $bitrate = @$_COOKIE['bitrate'] or $bitrate = null;
                 </select>
             </td>
         </tr>
+        <tr><td class="first">mtag:</td><td><input id="mtag" name="mtag" type="text" value="" /></td><td><input id="lookup_mtag" type="button" value="Lookup" /></td></tr>
     </table>
 
 </div>
 <div class="box">
-    <h2>Content Sources / Media Keys</h2>
+    
     <div id="tabs">
         <ul>
             <li><a href="#tabs-top-1">Content Sources</a></li>
             <li><a href="#tabs-top-2">Media Keys</a></li>
         </ul>
         <div id="tabs-top-1">
-            <textarea id="content_sources"><?php echo $content_sources ?></textarea>
+            <textarea id="content_sources"><?php echo $sources ?></textarea>
             <div align="right" style="padding-top: 5px;"><input id="add_trailer_url" type="button" value="Add Source" /></div>
         </div>
         <div id="tabs-top-2">
-            <textarea id="media_keys"><?php echo $mediakeys ?></textarea>
+            <textarea id="media_keys"><?php echo $mkeys ?></textarea>
             <div align="right" style="padding-top: 5px;"><input id="add_mkey" type="button" value="Add Key" />&nbsp;<input id="lookup_mkeys" type="button" value="Lookup" /></div>
         </div>
     </div>
@@ -217,23 +233,25 @@ $bitrate = @$_COOKIE['bitrate'] or $bitrate = null;
         <ul>
             <li><a href="#tabs-movie">Movie</a></li>
             <li><a href="#tabs-album">Album</a></li>
-            <li><a href="#">Series Season</a></li>
-            <li><a href="#">Series Episode</a></li>
-            <li><a href="#">Album Track</a></li>
         </ul>
         <div id="tabs-movie">
             <table cellpadding="0" cellspacing="0">
                 <tr><td class="first">Title:</td><td><input id="movie_title" name="movie_title" type="text" value="" /></td></tr>
                 <tr><td class="first">Year:</td><td><input id="movie_year" name="movie_year" type="number" value="" /></td>
-                <tr><td valign="top" class="first">Summary:</td><td><textarea id="movie_summary" name="movie_summary" type="text" value=""></textarea></td>
+                <tr><td valign="top" class="first">Plot:</td><td><textarea id="movie_summary" name="movie_summary" type="text" value=""></textarea></td>
+                <tr><td class="first">Tagline:</td><td><input id="movie_tagline" name="movie_tagline" type="text" value="" /></td></tr>
                 <tr><td class="first">Genres:</td><td><input id="movie_genres" name="movie_genres" type="text" value="" /></td>
                 <tr><td class="first">Actors:</td><td><input id="movie_actors" name="movie_actors" type="text" value="" /></td>
                 <tr><td class="first">Directors:</td><td><input id="movie_directors" name="movie_directors" type="text" value="" /></td>
-                <tr><td class="first">Producers:</td><td><input id="movie_producers" named="movie_producers" type="text" value="" /></td>
                 <tr><td class="first">Writers:</td><td><input id="movie_writers" name="movie_writers" type="text" value="" /></td>
+                <tr><td class="first">Runtime:</td><td><input id="movie_runtime" name="movie_runtime" type="number" value="" /></td>
+                <tr><td class="first">Release Date:</td><td><input id="movie_release_date" name="movie_release_date" type="text" value="" /></td></tr>
+                <tr><td class="first">Classification:</td><td><input id="movie_classification" name="movie_classification" type="text" value="" /></td></tr>
+                <tr><td class="first">IMDB Number:</td><td><input id="movie_imdb_tt" name="movie_imdb_tt" type="text" value="" /></td></tr>
+                <tr><td class="first">IMDB Rating:</td><td><input id="movie_imdb_rating" name="movie_imdb_rating" type="number" value="" /></td>
             </table>
             <div class="note">
-                Note: Fields with multiple entries are separated by a semi-colon (;)
+                Note: Separate fields with multiple values with a semi-colon (;).
             </div>
         </div>
 
@@ -250,7 +268,7 @@ $bitrate = @$_COOKIE['bitrate'] or $bitrate = null;
             </table>
         
             <div class="note">
-                Note: Fields with multiple entries are separated by a semi-colon (;)
+                Note: Separate fields with multiple values with a semi-colon (;).
             </div>
         </div>
 

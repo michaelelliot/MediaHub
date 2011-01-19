@@ -19,13 +19,15 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
  */
-
 include("common.inc.php");
+
+session_start();
+$messages = array();
 
 $section = @trim(preg_replace("/[^a-z]/i", "", $_REQUEST['section']));
 if (!$section) {
     $section = "home";
-    clear_cookie_fields();
+    session_unset();
 }
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">

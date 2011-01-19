@@ -10,7 +10,9 @@ require_once('includes/json-rpc/jsonRPCClient.php');
 include("includes/bencode/bencode.php");
 include("common.inc.php");
 
-error_reporting(E_ALL);// ^ E_NOTICE);
+session_start();
+# Clear session data
+session_unset();
 
 if (!isset($_REQUEST['uploader_0_tmpname'])) die("Invalid POST");
 
@@ -23,8 +25,8 @@ $bencode = new Bencode();
 $result = $bencode::decode($torrent_data);
 $largest_length = 0;
 $filetype_count = array();
-$mclass = null;
 
+# Count file types and find largest file
 if (isset($result['info']['files'])) {
     foreach($result['info']['files'] as $file) {
         if (preg_match("/\.([a-z0-9]+)$/i", $file['path'][count($file['path']) - 1], $matches)) {
@@ -41,57 +43,57 @@ if (isset($result['info']['files'])) {
     }
 }
 
-if ($_REQUEST['mclass'] == "detect") {
+# Try to detect mclass
+if (@$_REQUEST['mclass'] == "detect") {
     switch($largest_filetype) {
-        // Video
+        # Video
         case "avi":
         case "m4v":
         case "mp4":
         case "mkv":
         case "wmv":
 
-            // Probably an episode
+            # Probably an episode
             if (preg_match("/(^[0-9]{1,3}[\.]  | [0-9]{1,2}x[0-9]{1,3} | [0-9]{3} | s[0-9]{1,2} ?e[0-9]{1,3} )/i", $largest_filename)) {
                 $mclass = "episode";
-            // Otherwise probably a movie
+            # Otherwise probably a movie
             } else {
                 $mclass = "movie";
             }
             break;
 
-        // Audio
+        # Audio
         case "mp3":
         case "m4a":
         case "wav":
         case "flac":
         case "wma":
 
-            // If only 1, probably a track
+            # If only 1, probably a track
             if (isset($filetype_count[$largest_filetype])) {
                 if ($filetype_count[$largest_filetype] == 1) {
                     $mclass = "track";
-                // Otherwise probably an album
+                # Otherwise probably an album
                 } else {
                     $mclass = "album";
                 }
             }
             break;
 
-        // Probably a game
+        # Probably a game
         case "iso":
         case "bin":
         case "img":
             $mclass = "game";
-        // Probably an application
+        # Probably an application
             break;
 
         case "exe":
             $mclass = "application";
             break;
     }
-    setcookie('mclass', $mclass);
 } else {
-    setcookie('mclass', $_REQUEST['mclass']);
+    $mclass = @$_REQUEST['mclass'] or $mclass = null;
 }
 
 $name = null;
@@ -99,26 +101,28 @@ $title = null;
 $artist = null;
 $year = null;
 $bitrate = null;
+$info_hash = sha1(Bencode::encode($result['info']));
+$torrent_filename = $_POST['uploader_0_name'];
 
-// Set name if present in torrent
+# Set name if present in torrent
 if (isset($result['info']['name'])) {
     $name = $result['info']['name'];
-    // Set year if detected
+    # Set year if detected
     if (preg_match("/(1[89][0-9]{2}|2[01][0-9]{2})/i", $name, $matches)) {
         $year = $matches[1];
     }
-    // Set bitrate if detected
+    # Set bitrate if detected
     if (preg_match("/(128|160|192|224|256|320)(kbps|kb|kbs|kbits)/i", $name, $matches)) {
         $bitrate = $matches[1];
     } else if (preg_match("/VBR/i", $name)) {
         $bitrate = "VBR";
     }
-    // Detect if it's a movie
+    # Detect if it's a movie
     if (!$bitrate && $mclass == "movie") {
         if (preg_match("/^([a-z0-9:' ]+)(\(|\[)/i", $name, $matches)) {
             $title = trim($matches[1]);
         }
-    // Detect if it's an album
+    # Detect if it's an album
     } else if ($mclass == "album") {
         if (preg_match("/^([a-z0-9' ]+)( - |: )([a-z0-9' ]+)([^a-z0-9' ]|$)/i", $name, $matches)) {
             $artist = trim($matches[1]);
@@ -127,90 +131,71 @@ if (isset($result['info']['name'])) {
     }
 }
 
-setcookie('name', $name);
-setcookie('artist', $artist);
-setcookie('title', $title);
-setcookie('year', $year);
-setcookie('bitrate', $bitrate);
+# Set main fields
+$_SESSION['mclass'] = $mclass;
+$_SESSION['name'] = $name;
+$_SESSION['artist'] = $artist;
+$_SESSION['title'] = $title;
+$_SESSION['year'] = $year;
 
+# Set content specific fields
+$_SESSION['bitrate'] = $bitrate;
+$_SESSION['torrent_info_hash'] = $info_hash;
+$_SESSION['torrent_filename'] = $torrent_filename;
 
-#print "<pre>";
-#print_r($result['info']);
-#print "</pre>";
-#exit;
-
-$info_hash = sha1(Bencode::encode($result['info']));
-$torrent_filename = $_POST['uploader_0_name'];
-
-# Save values as cookies
-#setcookie('torrent.info_hash', $info_hash);
-#setcookie('torrent.filename', $torrent_filename);
-
-// Send data to MediaTag for lookup
+# Send data to MediaTag for lookup
 $client  = new jsonRPCClient('http://localhost/MediaTag/src/api/');
-$client->debug = true;
+#$client->debug = true;
 
-// Prepare mkeys
+# Prepare mkeys
 $mkeys = array("btih:$info_hash");
-if ($torrent_filename && strtolower(substr($torrent_filename, 0, strlen($info_hash))) != strtolower($info_hash)) $mkeys[] = json_sanitize("filename:$torrent_filename");
-if ($name) $mkeys[] = json_sanitize("name:$name");
-if ($mclass == "movie" && $title && $year) $mkeys[] = json_sanitize("movie:title($title) year($year)");
-if ($mclass == "album" && $artist && $title && $year) $mkeys[] = json_sanitize("album:artist($artist) title($title) year($year)");
+if ($torrent_filename && strtolower(substr($torrent_filename, 0, strlen($info_hash))) != strtolower($info_hash)) {
+    $mkeys[] = json_sanitize(sanitize_search_term("filename:$torrent_filename"));
+}
+# TODO: What is name? How is it different from title?
+if ($name) {
+    $mkeys[] = json_sanitize(sanitize_search_term("name:$name"));
+}
+if ($mclass == "movie" && $title && $year) {
+    #$mkeys[] = json_sanitize(sanitize_search_term("movie:title($title) year($year)"));
+    $mkeys[] = json_sanitize(sanitize_search_term("title:$title ($year)"));
+}
+if ($mclass == "album" && $artist && $title && $year) {
+    $mkeys[] = json_sanitize(sanitize_search_term("title:$artist - $title ($year)"));
+}
 
+# Make the call
 try {
     $result = $client->lookup_mkeys(
             array('mkeys' => $mkeys));
 } catch(Exception $e) {
     die ("RPC Error: " . $e->getMessage());
 }
-//var_dump($result);
-//exit;
+#var_dump($result);
+#exit;
 
+# Handle result
 if (isset($result)) {
-    
     if ($result['result'] == "not found") {
-        //header("Location: page_tags.php?not_found");
+        header("Location: index.php?section=tags&result=not_found");
     } else if ($result['result'] == "success") {
+        $_SESSION['foundvia'] = 'mkeys';
+        foreach($result['meob'] as $key => $val) {
+            if (is_array($_SESSION[$key])) {
+                $_SESSION[$key] = join("\n", $val);
+            } else {
+                $_SESSION[$key] = $val;
+            }
+        }
 
-        // TODO: Clear all fields
-        // setcookie('meob_*', '') etc.
+        // TODO: Uncomment this line
+        $_SESSION['sources'] = "feature: btih(" . $info_hash . ");\ntrailer: url(http://www.youtube.com/watch?v=UM5yepZ21pI) in-browser;\n";
 
-        clear_cookie_fields();
-
-        //$mediakeys = "btih:" . $info_hash . "\r\n";
-        //if (strtolower(substr($torrent_filename, 0, strlen($info_hash))) != strtolower($info_hash)) $mediakeys .= "filename:" . $torrent_filename . "\r\n";
-        //if ($name) $mediakeys .= "name:" .  $name . "\r\n";
-        
-        $mediakeys = join("\n", $mkeys);
-
-
-        $meob = $result['meob'];
-        setcookie('meob_mtag', $meob['mtag']);
-        setcookie('meob_mclass', $meob['mclass']);
-        setcookie('meob_title', $meob['title']);
-        setcookie('meob_year', $meob['year']);
-        setcookie('meob_summary', $meob['summary']);
-        setcookie('meob_genres', join(";", $meob['genres']));
-        setcookie('meob_actors', join(";", $meob['actors']));
-        setcookie('meob_directors', join(";", $meob['directors']));
-        setcookie('meob_producers', join(";", $meob['producers']));
-        setcookie('meob_artist', $meob['artist']);
-        setcookie('meob_number', intval($meob['number']));
-        setcookie('meob_duration', intval($meob['duration']));
-        setcookie('meob_production_code', $meob['production_code']);
-        setcookie('meob_ext_imdb', $meob['ext_imdb_tt']);
-        setcookie('meob_ext_imdb_rating', floatval($meob['ext_imdb_rating']));
-        setcookie('meob_ext_rottentomatoes_rating', intval($meob['ext_rotten_tomatoes_rating']));
-
-        setcookie('content_sources', "relation: feature; source: btih(" . $info_hash . ");\r\nrelation: trailer; source: url(http://www.youtube.com/watch?v=UM5yepZ21pI);\r\n");
-        setcookie('mediakeys', $mediakeys);
-
+        $_SESSION['mkeys'] = join("\n", $mkeys);
         header("Location: index.php?section=tags");
         exit;
     } else {
         die("Unknown error");
     }
 }
-
-
 ?>
