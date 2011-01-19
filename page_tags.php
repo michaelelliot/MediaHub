@@ -8,39 +8,88 @@ $name = @$_SESSION['name'] or $name = null;
 $year = @$_SESSION['year'] or $year = null;
 $artist = @$_SESSION['artist'] or $artist = null;
 $title = @$_SESSION['title'] or $title = null;
+// TODO?
 $bitrate = @$_SESSION['bitrate'] or $bitrate = null;
 
 if (@$_SESSION['foundvia'] == 'mkeys') {
-    $messages[] = "Content class is <b>$mclass.</b>";
     $messages[] = "Matched to a media object (mtag <b>$mtag</b>) using mkeys.";
+    $messages[] = "Content class is <b>$mclass.</b>";
+} else {
+    $messages[] = "Unable to match with a media object.";
+    if ($mclass != "unknown" && $mclass) $messages[] = "Content class is probably <b>$mclass.</b>";
 }
 ?>
 <script type="text/javascript">
+    // Clear messages
+    function clear_messages() {
+        $('ul.messages li').each(function(i){
+            $(this).remove();
+        });
+    }
+    // Add message
+    function add_message(m) {
+       $("ul.messages").append('<li>' + m + '</li>');
+    }
+    // Clear fields
+    function clear_fields() {
+        //$('#sources').val ('');
+        //$('#mkeys').val ('');
 
-
+        // Clear movie fields
+        $('#movie_title').val ('');
+        $('#movie_year').val ('');
+        $('#movie_plot').val ('');
+        $('#movie_tagline').val ('');
+        $('#movie_genres').val ('');
+        $('#movie_actors').val ('');
+        $('#movie_directors').val ('');
+        $('#movie_writers').val ('');
+        $('#movie_runtime').val ('');
+        $('#movie_release_date').val ('');
+        $('#movie_classification').val ('');
+        $('#movie_imdb_tt').val ('');
+        $('#movie_imdb_rating').val ('');
+    }
     // Process incoming meob fields from a lookup
     function process_meob_fields(meob) {
         try {
             if (typeof meob['mtag'] != 'undefined') $('#mtag').val(meob['mtag']);
             if (typeof meob['mclass'] != 'undefined') $('#mclass').val(meob['mclass']);
-            
+
+            // Ensure not already in field
+            if (typeof meob['mkeys'] != 'undefined') {
+                $(meob['mkeys']).each(function(i, e) {
+                        if ($('#mkeys').val().indexOf(e) == -1) {
+                            // Note: a.append was playing up
+                            $('#mkeys').val($('#mkeys').val() + e + "\n")
+                            
+                        }
+                    });
+            }
+            if (typeof meob['source'] != 'undefined') {
+                $(meob['source']).each(function(i, e) {
+                        if ($('#source').val().indexOf(e) == -1) $('#source').append(e + "\n");
+                    });
+            }
+
             switch(meob['mclass'].toLowerCase()) {
                 case 'movie':
                     if (typeof meob['title'] != 'undefined') $('#movie_title').val(meob['title']);
                     if (typeof meob['year'] != 'undefined') $('#movie_year').val(meob['year']);
                     if (typeof meob['plot'] != 'undefined') $('#movie_plot').val(meob['plot']);
                     if (typeof meob['tagline'] != 'undefined') $('#movie_tagline').val(meob['tagline']);
-                    if (typeof meob['genres'] != 'undefined') $('#movie_genres').val(meob['genres'].join(';'));
-                    if (typeof meob['actors'] != 'undefined') $('#movie_actors').val(meob['actors'].join(';'));
+                    if (typeof meob['genres'] != 'undefined') $('#movie_genres').val(meob['genres'].join('; '));
+                    if (typeof meob['actors'] != 'undefined') $('#movie_actors').val(meob['actors'].join('; '));
                     if (typeof meob['directors'] != 'undefined') $('#movie_directors').val(meob['directors'].join('; '));
-                    if (typeof meob['writers'] != 'undefined') $('#movie_writers').val(meob['writers'].join(';'));
+                    if (typeof meob['writers'] != 'undefined') $('#movie_writers').val(meob['writers'].join('; '));
                     if (typeof meob['runtime'] != 'undefined') $('#movie_runtime').val(meob['runtime']);
                     if (typeof meob['release_date'] != 'undefined') $('#movie_release_date').val(meob['release_date']);
                     if (typeof meob['classification'] != 'undefined') $('#movie_classification').val(meob['classification']);
                     if (typeof meob['imdb_tt'] != 'undefined') {
-                        // Add imdb_tt to mkeys
-                        if ($('#media_keys').val().indexOf('imdb:') == -1) $('#media_keys').append('imdb:' + meob['imdb_tt'] + "\n");
                         if (typeof meob['imdb_tt'] != 'undefined') $('#movie_imdb_tt').val(meob['imdb_tt']);
+
+                        // Add imdb_tt to mkeys
+                       //if ($('#mkeys').val().indexOf('imdb:') == -1) $('#mkeys').append('imdb:' + meob['imdb_tt'] + "\n");
                     }
                     if (typeof meob['imdb_rating'] != 'undefined') $('#movie_imdb_rating').val(meob['imdb_rating']);
                     $('#content_fields_tabs').tabs().tabs('select', '#tabs-movie');
@@ -68,8 +117,7 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
             alert("Javascript error: " + e);
         }
     }
-
-  
+    
     $('#save').click(function() {
         
        if ($('#mtag').val() == "") throw("Invalid mtag entered");
@@ -78,43 +126,53 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
        // TODO: ...
         
     });
-
     // Validate that an mtag is valid
     // Returns true if valid
+    // TODO: ...
     function validate_mtag(mtag) {
         if (!mtag) return false;
         return true;
     }
     // On document ready
     $(function() {
-
-        $('#mclass').val('<?php echo $mclass ?>');
-
-        
-        //$('#movie_year').val ('');
-        // TODO: Set all year fields
-
-        // TODO: Set bitrate field
-        
-
-        // TODO: Figure out if going to keep this
+        <?php
+        if (isset($_SESSION['mclass'])) echo "$('#mclass').val ('{$_SESSION['mclass']}');";
+        if (isset($_SESSION['mtag'])) echo "$('#mtag').val ('{$_SESSION['mtag']}');";
+        if (isset($_SESSION['sources'])) echo "$('#sources').val ('" . json_sanitize(preg_replace("/[\r\n|\n|\r]/", "\\n", $_SESSION['sources'])) . "');";
+        if (isset($_SESSION['mkeys'])) echo "$('#mkeys').val ('" . json_sanitize(preg_replace("/[\r\n|\n|\r]/", "\\n", $_SESSION['mkeys'])) . "');";
+        ?>
         switch($('#mclass').val()) {
             case 'movie':
-                <?php if ($year) echo "$('#movie_year').val ('" . $year . "');"; ?>
-                <?php if ($title) echo "$('#movie_title').val ('" . $title . "');"; ?>
-                    
+                <?php
+                if (isset($_SESSION['title'])) echo "$('#movie_title').val ('" . json_sanitize($_SESSION['title']) . "');";
+                if (isset($_SESSION['year'])) echo "$('#movie_year').val ('" . json_sanitize($_SESSION['year']) . "');";
+                if (isset($_SESSION['plot'])) echo "$('#movie_plot').val ('" . json_sanitize($_SESSION['plot']) . "');";
+                if (isset($_SESSION['tagline'])) echo "$('#movie_tagline').val ('" . json_sanitize($_SESSION['tagline']) . "');";
+                if (isset($_SESSION['genres'])) echo "$('#movie_genres').val ('" . join("; ", json_sanitize($_SESSION['genres'])) . "');";
+                if (isset($_SESSION['actors'])) echo "$('#movie_actors').val ('" . join("; ", json_sanitize($_SESSION['actors'])) . "');";;
+                if (isset($_SESSION['directors'])) echo "$('#movie_directors').val ('" . join("; ", json_sanitize($_SESSION['directors'])) . "');";
+                if (isset($_SESSION['writers'])) echo "$('#movie_writers').val ('" . join("; ", json_sanitize($_SESSION['writers'])) . "');";
+                if (isset($_SESSION['runtime'])) echo "$('#movie_runtime').val ('" . json_sanitize($_SESSION['runtime']) . "');";
+                if (isset($_SESSION['release_date'])) echo "$('#movie_release_date').val ('" . json_sanitize($_SESSION['release_date']) . "');";
+                if (isset($_SESSION['classification'])) echo "$('#movie_classification').val ('" . json_sanitize($_SESSION['classification']) . "');";
+                if (isset($_SESSION['imdb_tt'])) echo "$('#movie_imdb_tt').val ('" . json_sanitize($_SESSION['imdb_tt']) . "');";
+                if (isset($_SESSION['imdb_rating'])) echo "$('#movie_imdb_rating').val ('" . json_sanitize($_SESSION['imdb_rating']) . "');";
+                ?>
                 $('#content_fields_tabs').tabs().tabs('select', '#tabs-movie');
                 break;
+
             case 'album':
-                <?php if ($title) echo "$('#album_title').val ('" . $title . "');"; ?>
-                <?php if ($year) echo "$('#album_year').val ('" . $year . "');"; ?>
-                <?php if ($artist) echo "$('#album_artist').val ('" . $artist . "');"; ?>
+                <?php
+                /*
+                    if ($title) echo "$('#album_title').val ('" . $title . "');";
+                    if ($year) echo "$('#album_year').val ('" . $year . "');";
+                    if ($artist) echo "$('#album_artist').val ('" . $artist . "');";
+                 * */
+                 ?>
                 $('#content_fields_tabs').tabs().tabs('select', '#tabs-album');
                 break;
             case 'track':
-
         }
-
 
         $('#lookup_mtag').bind('click', function() {
 
@@ -122,6 +180,9 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
                 alert("Invalid mtag entered.");
                 return;
             }
+            clear_fields();
+            clear_messages();
+            add_message('Looking up mtag ' + $('#mtag').val() + '...');
             showLightbox();
             $.jsonRPC.setup({
                 endPoint: 'http://localhost/MediaTag/src/api/',
@@ -132,11 +193,14 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
                     if (result['result'].toLowerCase() == 'success') {
                         meob = result['meob'];
                         process_meob_fields(meob);
+                        add_message('<span class="success">Successfully matched mtag with media object.</span>');
+                    } else {
+                        add_message('<span class="failure">Couldn\'t match mtag</span>');
                     }
                 },
                 error: function(result) {
-                    alert("RPC Error" + var_dump(result));
-                    //alert("Error: " + result['result']);
+                    //alert("RPC Error" + var_dump(result));
+                    add_message('<span class="failure"><span class="success">RPC Error: ' + var_dump(result) + '</span>');
                 },
                 completed: function(result) {
                     hideLightbox();
@@ -153,7 +217,6 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
             } else {
                 params = [{'mkeys' : ["btih:c389547e7551e9785c4fa87935824a5403d178e8","filename:test.torrent"] }];
             }
-            
             showLightbox();
             $.jsonRPC.setup({
                 endPoint: 'http://localhost/MediaTag/src/api/',
@@ -217,11 +280,11 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
             <li><a href="#tabs-top-2">Media Keys</a></li>
         </ul>
         <div id="tabs-top-1">
-            <textarea id="content_sources"><?php echo $sources ?></textarea>
+            <textarea id="sources" class="nowrap"></textarea>
             <div align="right" style="padding-top: 5px;"><input id="add_trailer_url" type="button" value="Add Source" /></div>
         </div>
         <div id="tabs-top-2">
-            <textarea id="media_keys"><?php echo $mkeys ?></textarea>
+            <textarea id="mkeys" class="nowrap"></textarea>
             <div align="right" style="padding-top: 5px;"><input id="add_mkey" type="button" value="Add Key" />&nbsp;<input id="lookup_mkeys" type="button" value="Lookup" /></div>
         </div>
     </div>
@@ -238,7 +301,7 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
             <table cellpadding="0" cellspacing="0">
                 <tr><td class="first">Title:</td><td><input id="movie_title" name="movie_title" type="text" value="" /></td></tr>
                 <tr><td class="first">Year:</td><td><input id="movie_year" name="movie_year" type="number" value="" /></td>
-                <tr><td valign="top" class="first">Plot:</td><td><textarea id="movie_summary" name="movie_summary" type="text" value=""></textarea></td>
+                <tr><td valign="top" class="first">Plot:</td><td><textarea id="movie_plot" name="movie_plot" type="text" value=""></textarea></td>
                 <tr><td class="first">Tagline:</td><td><input id="movie_tagline" name="movie_tagline" type="text" value="" /></td></tr>
                 <tr><td class="first">Genres:</td><td><input id="movie_genres" name="movie_genres" type="text" value="" /></td>
                 <tr><td class="first">Actors:</td><td><input id="movie_actors" name="movie_actors" type="text" value="" /></td>
@@ -251,12 +314,11 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
                 <tr><td class="first">IMDB Rating:</td><td><input id="movie_imdb_rating" name="movie_imdb_rating" type="number" value="" /></td>
             </table>
             <div class="note">
-                Note: Separate fields with multiple values with a semi-colon (;).
+                Note: Separate fields that have multiple values with a semi-colon (;).
             </div>
         </div>
-
         <div id="tabs-album">
-            <table cellpadding="0" cellspacing="0">
+            <table cellpadding="0" cellspacing="0" style="visibility: hidden;">
                 <tr><td class="first">Artist:</td><td><input id="album_artist" name="album_artist" type="text" value="" /></td>
                 <tr><td class="first">Title:</td><td><input id="album_title" name="album_title" type="text" value="" /></td></tr>
                 <tr><td class="first">Year:</td><td><input id="album_year" name="album_year" type="number" value="" /></td>
@@ -266,9 +328,8 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
                 <tr><td class="first">Label:</td><td><input id="album_label" name="album_label" type="text" value="" /></td>
                 <tr><td class="first">Release Date:</td><td><input id="album_release_date" named="album_release_date" type="text" value="" /></td>
             </table>
-        
             <div class="note">
-                Note: Separate fields with multiple values with a semi-colon (;).
+                Note: Separate fields that have multiple values with a semi-colon (;).
             </div>
         </div>
 
