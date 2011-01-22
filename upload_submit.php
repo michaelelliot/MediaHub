@@ -1,6 +1,6 @@
 <?php
 /*
-  Copyright (C) 2011 thermal
+  Copyright (C) 2011 Network Digital
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -19,28 +19,23 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
  */
-/*
- * uploader_0_tmpname e.g. p15l8898k11a20c2612sv1jri11431.jpg
- * uploader_0_name	e.g. tumblr_lcvaneL4DT1qf6ccbo1_500.jpg
- * uploader_0_status e.g. done
- * uploader_count e.g. 1
- */
 session_start();
+require_once("config.inc.php");
 require_once("common.inc.php");
-require_once('includes/json-rpc/jsonRPCClient.php');
-require_once("includes/bencode/bencode.php");
+require_once('json-rpc/jsonRPCClient.php');
+require_once("bencode/bencode.php");
 
+# Sanity check
 if (!$logged_in) throw(new Exception("Must be logged in to view this page"));
-
-unset($_SESSION['fields']);
-
 if (!isset($_REQUEST['uploader_0_tmpname'])) die("Invalid POST");
+
+# Clear any previous field values
+unset($_SESSION['fields']);
 
 # Get torrent data from temp upload file
 $torrent_data = file_get_contents(ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload" . DIRECTORY_SEPARATOR . preg_replace("/[\\/]/", "", $_POST['uploader_0_tmpname']));
 
 # Decode torrent data and determine info_hash
-# Save all relevant values
 $bencode = new Bencode();
 $result = $bencode::decode($torrent_data);
 $largest_length = 0;
