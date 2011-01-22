@@ -36,6 +36,7 @@ $section = @trim(preg_replace("/[^a-z]/i", "", $_REQUEST['section'])) or $sectio
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
     <head>
+        <title>MediaHub Web Manager</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="Content-language" content="en" />
         <meta name="description" content="MediaHub Manager" />
@@ -102,12 +103,6 @@ $section = @trim(preg_replace("/[^a-z]/i", "", $_REQUEST['section'])) or $sectio
                 if (uploader.total.uploaded == 0) {
                     // Files in queue upload them first
                     if (uploader.files.length > 0) {
-                        // When all files are uploaded submit form
-                        uploader.bind('UploadProgress', function() {
-                            //if (uploader.total.uploaded == uploader.files.length)
-                                    //$('form').submit();
-                        });
-
                         uploader.start();
                     } else {
                         alert('You must at least upload one file.');
@@ -115,25 +110,13 @@ $section = @trim(preg_replace("/[^a-z]/i", "", $_REQUEST['section'])) or $sectio
                     e.preventDefault();
                 }
             });
-        });
-        </script>
-        <title>MediaHub Web Manager</title>
-        <script type="text/javascript">
-            $(function() {
-            });
-        </script>
-        <script type="text/javascript">
-        $(document).ready(function() {
+
             $('a.twitter_btn').click(function() {
                 $(this).css('background', 'url(<?php echo LIB_PATH ?>TwitterOAuth/twitter_btn.gif) no-repeat bottom left');
             });
         });
         </script>
         <style type="text/css">
-        /** {
-            font-family:'Lucida Grande', sans-serif;
-        }*/
- 
         a.twitter_btn  {
             display: block;
             background: url(<?php echo LIB_PATH ?>TwitterOAuth/twitter_btn.gif) no-repeat top left;
@@ -144,9 +127,7 @@ $section = @trim(preg_replace("/[^a-z]/i", "", $_REQUEST['section'])) or $sectio
     </head>
     <body>
         <center>
-            <!--<textarea id="log" style="display: none; width: 100%; height: 150px; font-size: 11px" spellcheck="false" wrap="off"></textarea>-->
- 
-                <!-- TOP PANE -->
+            <!-- TOP PANE -->
             <div class="top">
                 <table width="100%" cellpadding="0" cellspacing="0">
                     <tr>
