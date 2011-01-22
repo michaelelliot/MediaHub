@@ -10,9 +10,7 @@ $logged_in = @$_SESSION['twitter']['logged_in'];
 
 error_reporting(E_ALL);// ^ E_NOTICE);
 
-# Load config
-if (!file_exists("config.ini")) die("Please rename config.ini.rename to config.ini and configure it!");
-$config = parse_ini_file("config.ini", true);
+
 
 # Database setup
 $db_settings = array(

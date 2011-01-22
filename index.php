@@ -325,7 +325,7 @@ if (!$section) $section = "home";
                                     } else if ($section == "home") {
                                         include("page_home.php");
                                     } else {
-                                        echo "Unknown section!";
+                                        throw(new Exception('Unknown section'));
                                     }
                                 } catch (Exception $e) {
                                     print $e->getMessage();
