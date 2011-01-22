@@ -4,6 +4,7 @@ if (!file_exists("config.ini")) die("Please rename config.ini.rename to config.i
 $config = parse_ini_file("config.ini", true);
 
 # Set global constants
+print_r($config['general']['debug']);
 define('VERSION', $config['general']['version']);
 define('LIB_PATH', $config['general']['lib_path']);
 define('MEDIATAG_JSON_RPC_URL', $config['mediatag']['rpc_url']);
@@ -12,12 +13,13 @@ define('CONSUMER_SECRET', $config['oauth']['consumer_secret']);
 define('OAUTH_CALLBACK_FILE', $config['oauth']['callback_file']);
 define('OAUTH_CALLBACK_URL', (!empty($_SERVER['HTTPS'])) ? "https://" . $_SERVER['SERVER_NAME'] . substr($_SERVER['REQUEST_URI'], 0, strlen($_SERVER['REQUEST_URI']) - strpos(strrev($_SERVER['REQUEST_URI']), "/")) . OAUTH_CALLBACK_FILE : "http://" . $_SERVER['SERVER_NAME'] . substr($_SERVER['REQUEST_URI'], 0, strlen($_SERVER['REQUEST_URI']) - strpos(strrev($_SERVER['REQUEST_URI']), "/")) . OAUTH_CALLBACK_FILE);
 define('GET_CREDENTIALS', false);
+define('DEBUG', false);
 
 # Sanity check
 if (empty($config['oauth']['consumer_key']) || empty($config['oauth']['consumer_secret'])) {
     die('You need a consumer key and secret. Get one from <a href="https://twitter.com/apps">https://twitter.com/apps</a> and then update config.ini with your key values.');
 }
 
-# Update include path
 set_include_path(get_include_path() . ';' . __DIR__ . '/' . LIB_PATH);
+$logged_in = @$_SESSION['twitter']['logged_in'];
 ?>

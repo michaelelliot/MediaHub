@@ -1,19 +1,23 @@
-# MediaHub Config File
-# Please change the appropriate values below and then rename this
-# file to config.ini before using MediaHub
+; MediaHub Config File
+; Please change the appropriate values below and then rename this
+; file to config.ini before using MediaHub
 
 [general]
-local = true
+version = "0.0.2"
+lib_path = 'lib/'
+debug = false
 
+[mysql]
+server   = "localhost"
+database = "mediahub"
+username = "root"
+password = ""
 
-[local]
-mysql_username = "root"
-mysql_password = ""
-mysql_database = "mediahub"
-mysql_server   = "localhost"
+[mediatag]
+rpc_url = 'http://api.mediatag.org/json-rpc'
 
-[remote]
-mysql_username = "mediahub"
-mysql_password = ""
-mysql_database = "mediahub"
-mysql_server   = ""
+[oauth]
+; Get your own consumer key and secret from https://www.twitter.com/apps
+consumer_key = ''
+consumer_secret = ''
+callback_file = 'callback.php'
