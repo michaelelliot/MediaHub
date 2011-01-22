@@ -2,3 +2,4 @@ TODO:
 -----
 Setup api.mediatag.org/json-rpc and set api.mediatag.org to localhost for now.
 Have that URL in the config
+Setup hover over help bubbles explaining each field (like Joomla)

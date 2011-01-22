@@ -2,7 +2,7 @@
 
 body {
 	margin: 0;
-        background-color: #dbdbdb
+        background: #4fb9df url(../images/bg1.jpg) no-repeat top left;
 }
 body, p {
     font: 14px verdana,serif;
@@ -16,21 +16,12 @@ input[type=text] {
 table tr td {
     padding: 5px;
 }
-
-.themecolor1 {
-    background-color: #98293a;
+div.top td {
+    	color: #08303e;
 }
-.themecolor2 {
-    background-color: #b14a58;
-}
-.themecolor3 {
-    background-color: #c86c6b;
-}
-.themecolor4 {
-    background-color: #de9d76;
-}
-.themecolor5 {
-    background-color: #efc77f;
+div.top {
+        border-color: #2197c2;
+        background: #0c7ea6 url(../images/bg_top.png) repeat-y top left;
 }
 
 a {
@@ -121,9 +112,17 @@ table tr td.menu ul li {
     line-height: 20px;
     list-style: square inside none;
 }
+div.top {
+       
+       border-bottom:2px solid #2197c2;
+}
 div.body {
-    background-color: #fff;
-    border: 2px solid #f4ce87;
+                background-color: #8ad7f3;
+	color: black;
+        
+    
+    border: 2px solid #2197c2;
+    border-top: none;
     width: 1000px;
     text-align: left;
 }
@@ -131,23 +130,28 @@ div.body > table {
     width: 100%;
 }
 div.body > table tr td.menu {
-    background-color: #fff4d7;
-    border-color: #f4ce87;
-    border-width: 0 2px 2px 0;
+    border-color: #7acce9;
+    border-width: 2px 2px 2px 2px;
     border-style: solid;
     font-size: 10pt;
     text-align: left;
     padding: 10px 10px 10px 10px;
     white-space: nowrap;
+
+    background: #8ad7f3 url(../images/bg_menu.png) no-repeat top center;
 }
 div.body > table tr td.page {
-    background-color: #fff4d7;
-    border-color: #f4ce87;
-    border-width: 0 0 2px 0;
+    border-color: #7acce9;
+    border-width: 2px 2px 2px 1px;
     border-style: solid;
+    border-left-color: #4ab3d9;
     min-height: 750px;
     font-size: 11pt;
     width: 100%;
+
+    background: #8ad7f3 url(../images/bg_body.png) no-repeat top left;
+
+
 }
 div.body > table tr td.page div.page {
     min-height: 500px;
@@ -162,8 +166,8 @@ div.plupload_container {
 ul.messages {
     margin: 0 0 20px 0;
     padding: 7px 0 7px 28px;
-    border: 1px solid #efe2bf;
-    background-color: #fffaec;
+    border: 1px solid #7fcae7;
+    background-color: #cfedf9;
 }
 ul.messages li {
     color: black;

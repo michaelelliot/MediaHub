@@ -19,16 +19,20 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
  */
-include("common.inc.php");
-
 session_start();
+include("common.inc.php");
+include("TwitterOAuth/TwitterOAuth.php");
+
+if (isset($_REQUEST['logout'])) {
+    $logged_in = false;
+    unset($_SESSION['twitter']);
+}
+
 $messages = array();
 
 $section = @trim(preg_replace("/[^a-z]/i", "", $_REQUEST['section']));
-if (!$section) {
-    $section = "home";
-    session_unset();
-}
+if (!$section) $section = "home";
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -38,11 +42,6 @@ if (!$section) {
 	<meta name="description" content="" />
 
         <style type="text/css">@import url(css/styles.css);</style>
-
-
-
-
-        
 
         <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.8.7.custom.min.js"></script>
@@ -55,14 +54,6 @@ if (!$section) {
 
         <!-- Load Queue widget CSS and jQuery -->
         <style type="text/css">@import url(plupload/css/plupload.queue.css);</style>
-        <!--
-        
-        <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-        <script type="text/javascript">
-                google.load("jquery", "1.4.4");
-                google.load("jqueryui", "1.8.7");
-        </script>
-        -->
 
         <!-- Load plupload and all it's runtimes and finally the jQuery queue widget -->
         <script type="text/javascript" src="plupload/js/jquery.ui.plupload.min.js"></script>
@@ -73,8 +64,6 @@ if (!$section) {
 
         // Convert divs to queue widgets when the DOM is ready
         $(function() {
-
-
 
             function log() {
 		var str = "";
@@ -267,15 +256,55 @@ if (!$section) {
             $(function() {
             });
         </script>
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $('a.twitter_btn').click(function() {
+                $(this).css('background', 'url(<?php echo LIB_PATH ?>TwitterOAuth/twitter_btn.gif) no-repeat bottom left');
+            });
+        });
+        </script>
+        <style type="text/css">
+        /** {
+            font-family:'Lucida Grande', sans-serif;
+        }*/
+ 
+        a.twitter_btn  {
+            display: block;
+            background: url(<?php echo LIB_PATH ?>TwitterOAuth/twitter_btn.gif) no-repeat top left;
+            width: 151px;
+            height: 25px;
+        }
+        </style>
     </head>
     <body>
         <center>
-            <textarea id="log" style="display: none; width: 100%; height: 150px; font-size: 11px" spellcheck="false" wrap="off"></textarea>
-            <div style="width: 1000px; border: 2px solid #f4ce87; border-bottom: 0; text-align: left; background-color: #ffe8a8">
-                <div style="color: #7b6a5d; line-height: 50px; font-size: 15pt; position: relative; padding-left: 15px;">MediaHub Web Manager
-                    <div style="float: right; font-size: 7.5pt; bottom: 0px; position: absolute; right: 0px; padding-right: 15px;">MediaHub <?php echo $config['general']['version'] ?></div>
-                </div>
+            <!--<textarea id="log" style="display: none; width: 100%; height: 150px; font-size: 11px" spellcheck="false" wrap="off"></textarea>-->
+ 
+                <!-- TOP PANE -->
+            <div class="top">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td><div style="line-height: 35px; font-size: 15pt; position: relative; padding-left: 15px;">MediaHub Web Manager</div></td>
+                        <td align="center">
+                            <div style="font-size: 9pt; padding-right: 15px;"><?php
+
+                            if ($logged_in) echo "Logged in as <b>@" . TwitterOAuth::getUsername() . "</b>";
+
+                            ?></div>
+                        </td>
+                        <td align="center" width="100">
+                        <?php
+                        if (!$logged_in) {
+                            print '<a class="twitter_btn" href="redirect.php"></a>';
+                        } else {
+                            print '<a href="?logout">Log out</a>';
+                        }
+                        ?>
+                        </td>
+                    </tr>
+                </table>
             </div>
+
             <div class="body">
                 <table cellpadding="0" cellspacing="0">
                     <tr>
@@ -288,14 +317,18 @@ if (!$section) {
                         <td valign="top" class="page">
                             <div class="page">
                                 <?php
-                                if ($section == "upload") {
-                                   include("page_upload.php");
-                                } else if ($section == "tags") {
-                                   include("page_tags.php");
-                                } else if ($section == "home") {
-                                    include("page_home.php");
-                                } else {
-                                    echo "Unknown section!";
+                                try {
+                                    if ($section == "upload") {
+                                       include("page_upload.php");
+                                    } else if ($section == "tags") {
+                                       include("page_tags.php");
+                                    } else if ($section == "home") {
+                                        include("page_home.php");
+                                    } else {
+                                        echo "Unknown section!";
+                                    }
+                                } catch (Exception $e) {
+                                    print $e->getMessage();
                                 }
                                 ?>
                             </div>
@@ -303,6 +336,7 @@ if (!$section) {
                     </tr>
                 </table>
             </div>
+                <div style="font-size: 7.5pt; padding-top: 15px;">MediaHub v<?php echo $config['general']['version'] ?></div>
         </center>
     </body>
 </html>

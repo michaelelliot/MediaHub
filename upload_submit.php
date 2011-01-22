@@ -25,13 +25,16 @@
  * uploader_0_status e.g. done
  * uploader_count e.g. 1
  */
-require_once('includes/json-rpc/jsonRPCClient.php');
-include("includes/bencode/bencode.php");
-include("common.inc.php");
-
 session_start();
-# Clear session data
-session_unset();
+require_once("common.inc.php");
+require_once('includes/json-rpc/jsonRPCClient.php');
+require_once("includes/bencode/bencode.php");
+
+
+
+if (!$logged_in) throw(new Exception("Must be logged in to view this page"));
+
+unset($_SESSION['fields']);
 
 if (!isset($_REQUEST['uploader_0_tmpname'])) die("Invalid POST");
 
@@ -149,19 +152,19 @@ if (isset($result['info']['name'])) {
 }
 
 # Set main fields
-$_SESSION['mclass'] = $mclass;
-$_SESSION['name'] = $name;
-$_SESSION['artist'] = $artist;
-$_SESSION['title'] = $title;
-$_SESSION['year'] = $year;
+$_SESSION['fields']['mclass'] = $mclass;
+$_SESSION['fields']['name'] = $name;
+$_SESSION['fields']['artist'] = $artist;
+$_SESSION['fields']['title'] = $title;
+$_SESSION['fields']['year'] = $year;
 
 # Set content specific fields
-$_SESSION['bitrate'] = $bitrate;
-$_SESSION['torrent_info_hash'] = $info_hash;
-$_SESSION['torrent_filename'] = $torrent_filename;
+$_SESSION['fields']['bitrate'] = $bitrate;
+$_SESSION['fields']['torrent_info_hash'] = $info_hash;
+$_SESSION['fields']['torrent_filename'] = $torrent_filename;
 
 # Send data to MediaTag for lookup
-$client  = new jsonRPCClient('http://localhost/MediaTag/src/api/');
+$client  = new jsonRPCClient(MEDIATAG_JSON_RPC_URL);
 #$client->debug = true;
 
 # Prepare mkeys
@@ -188,27 +191,26 @@ try {
 } catch(Exception $e) {
     die ("RPC Error: " . $e->getMessage());
 }
-#var_dump($result);
-#exit;
+
+if ($mclass == "movie" || $mclass == "album") {
+    $_SESSION['fields']['sources'] = "feature: btih(" . $info_hash . ");\n";
+    if ($mclass == "movie") $_SESSION['fields']['sources'] .= "trailer: url(http://www.youtube.com/watch?v=XXX) in-browser;";
+}
+$_SESSION['fields']['mkeys'] = join("\n", $mkeys);
 
 # Handle result
 if (isset($result)) {
     if ($result['result'] == "not found") {
         header("Location: index.php?section=tags&result=not_found");
     } else if ($result['result'] == "success") {
-        $_SESSION['foundvia'] = 'mkeys';
+        $_SESSION['fields']['foundvia'] = 'mkeys';
         foreach($result['meob'] as $key => $val) {
-            if (is_array($_SESSION[$key])) {
-                $_SESSION[$key] = join("\n", $val);
+            if (is_array($_SESSION['fields'][$key])) {
+                $_SESSION['fields'][$key] = join("\n", $val);
             } else {
-                $_SESSION[$key] = $val;
+                $_SESSION['fields'][$key] = $val;
             }
         }
-        // TODO: Uncomment this line?
-        // This is a suggestion
-        $_SESSION['sources'] = "feature: btih(" . $info_hash . ");\ntrailer: url(http://www.youtube.com/watch?v=XXX) in-browser;";
-
-        $_SESSION['mkeys'] = join("\n", $mkeys);
         header("Location: index.php?section=tags");
         exit;
     } else {

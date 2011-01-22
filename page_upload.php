@@ -19,7 +19,9 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
  */
-?><h1>Add Content</h1>
+if (!$logged_in) throw(new Exception("Must be logged in to view this page"));
+?>
+<h1>Add Content</h1>
 <div style="width: 500px; text-align: left;">
     <form  method="post" action="upload_submit.php">
         <div class="box">

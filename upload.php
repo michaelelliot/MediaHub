@@ -8,6 +8,8 @@
  * License: http://www.plupload.com/license
  * Contributing: http://www.plupload.com/contributing
  */
+include("common.inc.php");
+//if (!$logged_in) throw(new Exception("Must be logged in to view this page"));
 
 // HTTP headers for no cache etc
 header('Content-type: text/plain; charset=UTF-8');

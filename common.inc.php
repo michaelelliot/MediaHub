@@ -1,7 +1,10 @@
 <?php
+require_once("config.inc.php");
 require_once('includes/sql_db/sql_db.inc.php');
 
 global $config;
+
+$logged_in = @$_SESSION['twitter']['logged_in'];
 
 //ini_set("memory_limit", "30M");
 

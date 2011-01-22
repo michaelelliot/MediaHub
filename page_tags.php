@@ -19,18 +19,20 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
  */
-$sources = @$_SESSION['sources'] or $sources = null;
-$mkeys = @$_SESSION['mkeys'] or $mkeys = null;
-$mclass = @$_SESSION['mclass'] or $mclass = "unknown";
-$mtag = @$_SESSION['mtag'] or $mtag = null;
-$name = @$_SESSION['name'] or $name = null;
-$year = @$_SESSION['year'] or $year = null;
-$artist = @$_SESSION['artist'] or $artist = null;
-$title = @$_SESSION['title'] or $title = null;
-// TODO?
-$bitrate = @$_SESSION['bitrate'] or $bitrate = null;
+if (!$logged_in) throw(new Exception("Must be logged in to view this page"));
 
-if (@$_SESSION['foundvia'] == 'mkeys') {
+$sources = @$_SESSION['fields']['sources'] or $sources = null;
+$mkeys = @$_SESSION['fields']['mkeys'] or $mkeys = null;
+$mclass = @$_SESSION['fields']['mclass'] or $mclass = "unknown";
+$mtag = @$_SESSION['fields']['mtag'] or $mtag = null;
+$name = @$_SESSION['fields']['name'] or $name = null;
+$year = @$_SESSION['fields']['year'] or $year = null;
+$artist = @$_SESSION['fields']['artist'] or $artist = null;
+$title = @$_SESSION['fields']['title'] or $title = null;
+// TODO?
+$bitrate = @$_SESSION['fields']['bitrate'] or $bitrate = null;
+
+if (@$_SESSION['fields']['foundvia'] == 'mkeys') {
     $messages[] = "Matched to a media object (mtag <b>$mtag</b>) using mkeys.";
     $messages[] = "Content class is <b>$mclass.</b>";
 } else {
@@ -152,27 +154,28 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
     // On document ready
     $(function() {
         <?php
-        if (isset($_SESSION['mclass'])) echo "$('#mclass').val ('{$_SESSION['mclass']}');";
-        if (isset($_SESSION['mtag'])) echo "$('#mtag').val ('{$_SESSION['mtag']}');";
-        if (isset($_SESSION['sources'])) echo "$('#sources').val ('" . trim(json_sanitize(preg_replace("/[\r\n|\n|\r]/", "\\n", $_SESSION['sources']))) . "\\n');";
-        if (isset($_SESSION['mkeys'])) echo "$('#mkeys').val ('" . trim(json_sanitize(preg_replace("/[\r\n|\n|\r]/", "\\n", $_SESSION['mkeys']))) . "\\n');";
+        if (isset($_SESSION['fields']['mclass'])) echo "$('#mclass').val ('{$_SESSION['fields']['mclass']}');";
+        if (isset($_SESSION['fields']['mtag'])) echo "$('#mtag').val ('{$_SESSION['fields']['mtag']}');";
+        if (isset($_SESSION['fields']['sources'])) echo "$('#sources').val ('" . trim(json_sanitize(preg_replace("/[\r\n|\n|\r]/", "\\n", $_SESSION['fields']['sources']))) . "\\n');";
+//        if (isset($_SESSION['fields']['mkeys'])) echo "$('#mkeys').val ('" . trim(json_sanitize(preg_replace("/[\r\n|\n|\r]/", "\\n", $_SESSION['fields']['mkeys']))) . "\\n');";
+        if (isset($_SESSION['fields']['mkeys'])) echo "$('#mkeys').val ('" . trim(json_sanitize(preg_replace("/[\r\n|\n|\r]/", "\\n", join("\n", $_SESSION['fields']['mkeys'])))) . "\\n');";
         ?>
         switch($('#mclass').val()) {
             case 'movie':
                 <?php
-                if (isset($_SESSION['title'])) echo "$('#movie_title').val ('" . json_sanitize($_SESSION['title']) . "');";
-                if (isset($_SESSION['year'])) echo "$('#movie_year').val ('" . json_sanitize($_SESSION['year']) . "');";
-                if (isset($_SESSION['plot'])) echo "$('#movie_plot').val ('" . json_sanitize($_SESSION['plot']) . "');";
-                if (isset($_SESSION['tagline'])) echo "$('#movie_tagline').val ('" . json_sanitize($_SESSION['tagline']) . "');";
-                if (isset($_SESSION['genres'])) echo "$('#movie_genres').val ('" . join("; ", json_sanitize($_SESSION['genres'])) . "');";
-                if (isset($_SESSION['actors'])) echo "$('#movie_actors').val ('" . join("; ", json_sanitize($_SESSION['actors'])) . "');";;
-                if (isset($_SESSION['directors'])) echo "$('#movie_directors').val ('" . join("; ", json_sanitize($_SESSION['directors'])) . "');";
-                if (isset($_SESSION['writers'])) echo "$('#movie_writers').val ('" . join("; ", json_sanitize($_SESSION['writers'])) . "');";
-                if (isset($_SESSION['runtime'])) echo "$('#movie_runtime').val ('" . json_sanitize($_SESSION['runtime']) . "');";
-                if (isset($_SESSION['release_date'])) echo "$('#movie_release_date').val ('" . json_sanitize($_SESSION['release_date']) . "');";
-                if (isset($_SESSION['classification'])) echo "$('#movie_classification').val ('" . json_sanitize($_SESSION['classification']) . "');";
-                if (isset($_SESSION['imdb_tt'])) echo "$('#movie_imdb_tt').val ('" . json_sanitize($_SESSION['imdb_tt']) . "');";
-                if (isset($_SESSION['imdb_rating'])) echo "$('#movie_imdb_rating').val ('" . json_sanitize($_SESSION['imdb_rating']) . "');";
+                if (isset($_SESSION['fields']['title'])) echo "$('#movie_title').val ('" . json_sanitize($_SESSION['fields']['title']) . "');";
+                if (isset($_SESSION['fields']['year'])) echo "$('#movie_year').val ('" . json_sanitize($_SESSION['fields']['year']) . "');";
+                if (isset($_SESSION['fields']['plot'])) echo "$('#movie_plot').val ('" . json_sanitize($_SESSION['fields']['plot']) . "');";
+                if (isset($_SESSION['fields']['tagline'])) echo "$('#movie_tagline').val ('" . json_sanitize($_SESSION['fields']['tagline']) . "');";
+                if (isset($_SESSION['fields']['genres'])) echo "$('#movie_genres').val ('" . join("; ", json_sanitize($_SESSION['fields']['genres'])) . "');";
+                if (isset($_SESSION['fields']['actors'])) echo "$('#movie_actors').val ('" . join("; ", json_sanitize($_SESSION['fields']['actors'])) . "');";;
+                if (isset($_SESSION['fields']['directors'])) echo "$('#movie_directors').val ('" . join("; ", json_sanitize($_SESSION['fields']['directors'])) . "');";
+                if (isset($_SESSION['fields']['writers'])) echo "$('#movie_writers').val ('" . join("; ", json_sanitize($_SESSION['fields']['writers'])) . "');";
+                if (isset($_SESSION['fields']['runtime'])) echo "$('#movie_runtime').val ('" . json_sanitize($_SESSION['fields']['runtime']) . "');";
+                if (isset($_SESSION['fields']['release_date'])) echo "$('#movie_release_date').val ('" . json_sanitize($_SESSION['fields']['release_date']) . "');";
+                if (isset($_SESSION['fields']['classification'])) echo "$('#movie_classification').val ('" . json_sanitize($_SESSION['fields']['classification']) . "');";
+                if (isset($_SESSION['fields']['imdb_tt'])) echo "$('#movie_imdb_tt').val ('" . json_sanitize($_SESSION['fields']['imdb_tt']) . "');";
+                if (isset($_SESSION['fields']['imdb_rating'])) echo "$('#movie_imdb_rating').val ('" . json_sanitize($_SESSION['fields']['imdb_rating']) . "');";
                 ?>
                 $('#content_fields_tabs').tabs().tabs('select', '#tabs-movie');
                 break;
@@ -201,7 +204,7 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
             add_message('Looking up mtag ' + $('#mtag').val() + '...');
             showLightbox();
             $.jsonRPC.setup({
-                endPoint: 'http://localhost/MediaTag/src/api/',
+                endPoint: '<?php echo MEDIATAG_JSON_RPC_URL ?>',
                 namespace: ''
             });
             $.jsonRPC.request('lookup_mtag', [$('#mtag').val()], {
@@ -277,7 +280,6 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
 </ul>
 
 <div class="box">
-    <h2>MediaTag Fields</h2>
     <table cellpadding="0" cellspacing="0">
         <tr>
             <td class="first">mclass:</td>
@@ -303,16 +305,19 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
         <ul>
             <li><a href="#tabs-top-1">Content Sources</a></li>
             <li><a href="#tabs-top-2">Media Keys</a></li>
+            <li><a href="#tabs-top-debug">Debug</a></li>
         </ul>
         <div id="tabs-top-1">
             <textarea id="sources" class="nowrap"></textarea>
-            <div align="right" style="padding-top: 5px;"><input id="add_trailer_url" type="button" value="Add Source" /></div>
+            <div align="right" style="padding-top: 5px;"><!-- <input id="add_trailer_url" type="button" value="Add Source" /> --></div>
         </div>
         <div id="tabs-top-2">
             <textarea id="mkeys" class="nowrap"></textarea>
             <div align="right" style="padding-top: 5px;"><!-- <input id="add_mkey" type="button" value="Add Key" />&nbsp; --><input id="lookup_mkeys" type="button" value="Lookup" /></div>
         </div>
-    </div>
+        <div id="tabs-top-debug">
+            <textarea id="debug" class="nowrap"><?php print_r($_SESSION['fields']) ?></textarea>
+        </div>
 </div>
 <hr />
 <div class="box">
@@ -367,7 +372,7 @@ if (@$_SESSION['foundvia'] == 'mkeys') {
     $('#content_fields_tabs').tabs();
     $('#tabs').tabs()
 </script>
-<hr />
+
 <div class="box" style="text-align: right;">
     <input id="save" type="button" value="Save" />
 </div>

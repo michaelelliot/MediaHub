@@ -1,4 +1,7 @@
 <?php
+//define('MEDIATAG_JSON_RPC_URL', 'http://localhost/MediaTag/src/api/');
+define('MEDIATAG_JSON_RPC_URL', 'http://api.mediatag.org/');
+
 define('CONSUMER_KEY', '2KMZ22GAebECbnhqQa3lA');
 define('CONSUMER_SECRET', 'HTQP349Z1HfZdPfxt4a4NKWSj1tJhAQQSOs1PNCkqs');
 define('OAUTH_CALLBACK_FILE', 'callback.php');
