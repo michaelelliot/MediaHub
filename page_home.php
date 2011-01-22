@@ -20,4 +20,10 @@
   SOFTWARE.
  */
 ?>
-<div>Welcome to the MediaHub Web Manager.</div>
+<div>
+    <p>Welcome to the MediaHub Web Manager.</p>
+    <p>
+        If you need help or would like to discuss MediaHub/MediaTag you can
+        find us on IRC in <a href="irc://irc.freenode.net:6667/mediatag">#mediatag on Freenode</a>.
+    </p>
+</div>
