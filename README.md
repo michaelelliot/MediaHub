@@ -1,6 +1,6 @@
 MediaHub
-=============
-Copyright (C) 2011 thermal
+========
+Copyright (C) 2011 Network Digital
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,5 +21,5 @@ SOFTWARE.
 
 See NOTES.md for more information
 
-If you'd like to help with this project, please email michael@digital.com.au.
+If you'd like to help with this project, please email me at michael@digital.com.au.
 
