@@ -30,8 +30,6 @@ require_once("common.inc.php");
 require_once('includes/json-rpc/jsonRPCClient.php');
 require_once("includes/bencode/bencode.php");
 
-
-
 if (!$logged_in) throw(new Exception("Must be logged in to view this page"));
 
 unset($_SESSION['fields']);
@@ -203,8 +201,11 @@ if (isset($result)) {
     if ($result['result'] == "not found") {
         header("Location: index.php?section=tags&result=not_found");
     } else if ($result['result'] == "success") {
-        $_SESSION['fields']['foundvia'] = 'mkeys';
+        $_SESSION['fields']['found_via'] = 'mkeys';
+        $_SESSION['fields']['found_using'] = $result['mkey'];
         foreach($result['meob'] as $key => $val) {
+
+            // TODO sessions can use arrays...
             if (is_array($_SESSION['fields'][$key])) {
                 $_SESSION['fields'][$key] = join("\n", $val);
             } else {

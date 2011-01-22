@@ -32,12 +32,12 @@ $title = @$_SESSION['fields']['title'] or $title = null;
 // TODO?
 $bitrate = @$_SESSION['fields']['bitrate'] or $bitrate = null;
 
-if (@$_SESSION['fields']['foundvia'] == 'mkeys') {
-    $messages[] = "Matched to a media object (mtag <b>$mtag</b>) using mkeys.";
-    $messages[] = "Content class is <b>$mclass.</b>";
+if (@$_SESSION['fields']['found_via'] == 'mkeys') {
+    $messages[] = "Media Object matched! Found using the mkey <b>" . $_SESSION['fields']['found_using'] . "</b>";
+    $messages[] = "Media Object mclass is <b>$mclass.</b>";
 } else {
-    $messages[] = "Unable to match with a media object.";
-    if ($mclass != "unknown" && $mclass) $messages[] = "Content class is probably <b>$mclass.</b>";
+    $messages[] = "Unable to find a matching Media Object :(";
+    if ($mclass != "unknown" && $mclass) $messages[] = "Media Object mclass is <i>probably</i> <b>$mclass.</b>";
 }
 ?>
 <script type="text/javascript">
