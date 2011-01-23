@@ -252,8 +252,13 @@ $bitrate = @$_SESSION['fields']['bitrate'] or $bitrate = null;
         
         $('#save').click(function() {
             // Sanity checks
-            if (!validate_mtag($('#mtag').val())) throw("Invalid mtag entered");
-            if ($('#mclass').val() == "unknown") throw("Must select an mclass");
+            if (!validate_mtag($('#mtag').val())) {
+                alert("Invalid mtag entered");
+                return;
+            }
+            if ($('#mclass').val() == "unknown") {
+                return alert("Must select an mclass");
+            }
 
             alert('Feature not yet available.');
             // TODO: Implement
@@ -321,8 +326,8 @@ $bitrate = @$_SESSION['fields']['bitrate'] or $bitrate = null;
                 <tr><td class="first">Runtime:</td><td><input id="movie_runtime" name="movie_runtime" type="number" value="" /></td>
                 <tr><td class="first">Release Date:</td><td><input id="movie_release_date" name="movie_release_date" type="text" value="" /></td></tr>
                 <tr><td class="first">Classification:</td><td><input id="movie_classification" name="movie_classification" type="text" value="" /></td></tr>
-                <tr><td class="first">IMDB Number:</td><td><input id="movie_imdb_tt" name="movie_imdb_tt" type="text" value="" /></td></tr>
-                <tr><td class="first">IMDB Rating:</td><td><input id="movie_imdb_rating" name="movie_imdb_rating" type="number" value="" /></td>
+                <tr><td class="first">IMDb Number:</td><td><input id="movie_imdb_tt" name="movie_imdb_tt" type="text" value="" /></td></tr>
+                <tr><td class="first">IMDb Rating:</td><td><input id="movie_imdb_rating" name="movie_imdb_rating" type="number" value="" /></td>
             </table>
             <div class="note">
                 Note: Separate fields that have multiple values with a semi-colon (;).

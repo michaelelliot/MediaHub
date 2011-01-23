@@ -207,6 +207,12 @@ if (isset($result)) {
             # Matched, on to second part (imdb_tt lookup)
             # TODO: Lookup imdb locally first
             #
+            //            /*
+            /*
+             *     $mtag = generate_mtag();
+    $mkeys = "imdb:{$r->data->tconst}\n" .
+             "title:{$r->data->title} ({$r->data->year})\n";
+             */
             #
             # 
             if (@$result['result'] == "success") {
