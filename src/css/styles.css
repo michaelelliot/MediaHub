@@ -155,7 +155,7 @@ div.body > table tr td.page {
 }
 div.body > table tr td.page div.page {
     min-height: 500px;
-    padding: 10px;
+    padding: 5px 10px 10px 10px;
 }
 div.plupload_container {
     border: 1px solid #888;

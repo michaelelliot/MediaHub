@@ -21,6 +21,6 @@ if (empty($config['oauth']['consumer_key']) || empty($config['oauth']['consumer_
     die('You need a consumer key and secret. Get one from <a href="https://twitter.com/apps">https://twitter.com/apps</a> and then update config.ini with your key values.');
 }
 
-set_include_path(get_include_path() . ';' . __DIR__ . '/' . LIB_PATH);
+set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__) . '/' . LIB_PATH);
 $logged_in = @$_SESSION['twitter']['logged_in'];
 ?>
