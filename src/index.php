@@ -183,6 +183,8 @@ if (isset($_REQUEST['login']) && !$logged_in) $messages[] = 'Error logging in. T
                                        include("page_tags.php");
                                     } else if ($section == "home") {
                                         include("page_home.php");
+                                    } else if ($section == "directory") {
+                                        echo "Feature not yet available.";
                                     } else {
                                         throw(new Exception('Unknown section'));
                                     }

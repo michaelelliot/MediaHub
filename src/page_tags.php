@@ -41,6 +41,12 @@ if (@$_SESSION['fields']['found_via'] == 'mkeys') {
 }
 ?>
 <script type="text/javascript">
+    // TODO: Impliment
+    // Return true if mtag is valid
+    function validate_mtag(mtag) {
+        if (mtag == '') return false;
+        return true;
+    }
     // Clear messages
     function clear_messages() {
         $('ul.messages li').each(function(i){
@@ -137,10 +143,12 @@ if (@$_SESSION['fields']['found_via'] == 'mkeys') {
     }
     
     $('#save').click(function() {
-        
-       if ($('#mtag').val() == "") throw("Invalid mtag entered");
+
+       // Sanity checks
+       if (!validate_mtag($('#mtag').val())) throw("Invalid mtag entered");
        if ($('#mclass').val() == "unknown") throw("Must select an mclass");
 
+       alert('Feature not yet available.');
        // TODO: ...
         
     });
@@ -364,5 +372,3 @@ if (@$_SESSION['fields']['found_via'] == 'mkeys') {
 <div class="box" style="text-align: right;">
     <input id="save" type="button" value="Save" />
 </div>
-<hr />
-<pre align="left"><?php //print_r($_COOKIE) ?></pre>
