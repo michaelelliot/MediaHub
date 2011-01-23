@@ -180,12 +180,13 @@ if ($mclass == "movie" && $title && $year) {
 if ($mclass == "album" && $artist && $title && $year) {
     $mkeys[] = json_sanitize(sanitize_search_term("title:$artist - $title ($year)"));
 }
-$_SESSION['fields']['mkeys'] = join("\n", $mkeys);
+$_SESSION['fields']['mkeys'] = $mkeys;
 
 # Prepare sources
+# TODO: Lookup trailer url (youtube?)
 if ($mclass == "movie" || $mclass == "album") {
-    $_SESSION['fields']['sources'] = "feature: btih(" . $info_hash . ");\n";
-    if ($mclass == "movie") $_SESSION['fields']['sources'] .= "trailer: url(http://www.youtube.com/watch?v=XXX) in-browser;";
+    $_SESSION['fields']['sources'] = array("feature: btih(" . $info_hash . ");");
+    if ($mclass == "movie") $_SESSION['fields']['sources'][] = "trailer: url(http://www.youtube.com/watch?v=XXX) in-browser;";
 }
 # Attempt to find this media object
 $found = false;
@@ -207,14 +208,20 @@ if (isset($result)) {
             # TODO: Lookup imdb locally first
             if (@$result['result'] == "success") {
                 add_message("Matched to imdb_tt <b>{$result['imdb_tt']}</b>");
+                $_SESSION['fields']['imdb_tt'] = $result['imdb_tt'];
+                $_SESSION['fields']['mkeys'][] = "imdb:{$result['imdb_tt']}";
                 # imdb_tt lookup
                 $result = $client->lookup_imdb_tt(array('imdb_tt' => $result['imdb_tt']));
                 if (@$result['result'] == "success") {
+                    add_message("Fields returned from IMDb using imdb_tt <b>{$result['imdb_tt']}</b>");
                     # Totally rework this
-                    # TODO: find mclass in imdb fields
+                    # TODO: find mclass in imdb fields and override if existing
                     $_SESSION['fields']['imdb_tt'] = $result['imdb_tt'];
                     $_SESSION['fields']['title'] = $result['title'];
                     $_SESSION['fields']['year'] = $result['year'];
+
+                    $_SESSION['fields']['mkeys'][] = "imdb:{$result['imdb_tt']}";
+                    $_SESSION['fields']['mkeys'] = array_unique($_SESSION['fields']['mkeys']);
                     $found = true;
                 } else {
                     add_message("Error looking up imdb_tt <b>{$result['imdb_tt']}</b>");
@@ -228,7 +235,6 @@ if (isset($result)) {
         if (!$found) {
             if ($mclass != "unknown" && $mclass) add_message("Media Object mclass is <i>probably</i> <b>$mclass.</b>");
         }
-        
         header("Location: index.php?section=tags");
         
     } else if (@$result['result'] == "success") {

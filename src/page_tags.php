@@ -139,9 +139,9 @@ $bitrate = @$_SESSION['fields']['bitrate'] or $bitrate = null;
         <?php
         if (isset($_SESSION['fields']['mclass'])) echo "$('#mclass').val ('{$_SESSION['fields']['mclass']}');";
         if (isset($_SESSION['fields']['mtag'])) echo "$('#mtag').val ('{$_SESSION['fields']['mtag']}');";
-        if (isset($_SESSION['fields']['sources'])) echo "$('#sources').val ('" . trim(json_sanitize(preg_replace("/[\r\n|\n|\r]/", "\\n", $_SESSION['fields']['sources']))) . "\\n');";
+        if (isset($_SESSION['fields']['sources'])) echo "$('#sources').val ('" . trim(json_sanitize(join("\\n", $_SESSION['fields']['sources']))) . "\\n');";
 //        if (isset($_SESSION['fields']['mkeys'])) echo "$('#mkeys').val ('" . trim(json_sanitize(preg_replace("/[\r\n|\n|\r]/", "\\n", $_SESSION['fields']['mkeys']))) . "\\n');";
-        if (isset($_SESSION['fields']['mkeys'])) echo "$('#mkeys').val ('" . trim(json_sanitize(preg_replace("/[\r\n|\n|\r]/", "\\n", join("\n", $_SESSION['fields']['mkeys'])))) . "\\n');";
+        if (isset($_SESSION['fields']['mkeys'])) echo "$('#mkeys').val ('" . trim(json_sanitize(join("\\n", $_SESSION['fields']['mkeys']))) . "\\n');";
         ?>
         switch($('#mclass').val()) {
             case 'movie':
