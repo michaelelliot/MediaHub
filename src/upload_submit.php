@@ -187,61 +187,57 @@ if ($mclass == "movie" || $mclass == "album") {
     $_SESSION['fields']['sources'] = "feature: btih(" . $info_hash . ");\n";
     if ($mclass == "movie") $_SESSION['fields']['sources'] .= "trailer: url(http://www.youtube.com/watch?v=XXX) in-browser;";
 }
-
-# Make the call
+# Attempt to find this media object
+$found = false;
 try {
     $result = $client->lookup_mkeys(
             array('mkeys' => $mkeys));
 } catch(Exception $e) {
     die ("RPC Error: " . $e->getMessage());
 }
-
-# Handle result
 if (isset($result)) {
-    if ($result['result'] == "not found") {
-        add_message("Couldn't match using mkeys");
+    if (@$result['result'] == "not found") {
 
-
+        add_message("Couldn't match using auto generated mkeys.");
         # Try matching using btih to imdb lookup
         try {
             # btih lookup
             $result = $client->google_search_btih(array('btih' => $info_hash));
-
             # Matched, on to second part (imdb_tt lookup)
             # TODO: Lookup imdb locally first
-            if (@$result['imdb_tt']) {
+            if (@$result['result'] == "success") {
+                add_message("Matched to imdb_tt <b>{$result['imdb_tt']}</b>");
                 # imdb_tt lookup
                 $result = $client->lookup_imdb_tt(array('imdb_tt' => $result['imdb_tt']));
+                if (@$result['result'] == "success") {
+                    # Totally rework this
+                    # TODO: find mclass in imdb fields
+                    $_SESSION['fields']['imdb_tt'] = $result['imdb_tt'];
+                    $_SESSION['fields']['title'] = $result['title'];
+                    $_SESSION['fields']['year'] = $result['year'];
+                    $found = true;
+                } else {
+                    add_message("Error looking up imdb_tt <b>{$result['imdb_tt']}</b>");
+                }
+            } else {
+                add_message("Couldn't match using <b>btih<b>to </b>imdb_tt</b> lookup.");
             }
-
-        # Make the call
         } catch(Exception $e) {
             add_message("RPC Error: " . $e->getMessage());
         }
-
-
-
-        } catch(Exception $e) {
-            die ("RPC Error: " . $e->getMessage());
+        if (!$found) {
+            if ($mclass != "unknown" && $mclass) add_message("Media Object mclass is <i>probably</i> <b>$mclass.</b>");
         }
-
-
-
-        if ($mclass != "unknown" && $mclass) add_message("Media Object mclass is <i>probably</i> <b>$mclass.</b>");
-        header("Location: index.php?section=tags&result=not_found");
         
-    } else if ($result['result'] == "success") {
+        header("Location: index.php?section=tags");
+        
+    } else if (@$result['result'] == "success") {
         $_SESSION['fields']['found_via'] = 'mkeys';
         $_SESSION['fields']['found_using'] = $result['mkey'];
         add_message("Media Object matched! Found using the mkey <b>{$_SESSION['fields']['found_using']}</b>");
         add_message("Media Object mclass is <b>$mclass.</b>");
         foreach($result['meob'] as $key => $val) {
-            // TODO sessions can use arrays...
-            if (is_array($_SESSION['fields'][$key])) {
-                $_SESSION['fields'][$key] = join("\n", $val);
-            } else {
-                $_SESSION['fields'][$key] = $val;
-            }
+            $_SESSION['fields'][$key] = $val;
         }
         header("Location: index.php?section=tags");
         exit;
