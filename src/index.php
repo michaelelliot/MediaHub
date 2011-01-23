@@ -25,7 +25,15 @@ require_once("common.inc.php");
 require_once("TwitterOAuth/TwitterOAuth.php");
 require_once('sql_db/sql_db.inc.php');
 
+# Handle messages
 $messages = array();
+if (@count($_SESSION['messages'])) {
+    foreach($_SESSION['messages'] as $msg) {
+        $messages[] = $msg;
+    }
+    unset($_SESSION['messages']);
+}
+
 $section = @trim(preg_replace("/[^a-z]/i", "", $_REQUEST['section'])) or $section = "home";
 
 if (isset($_REQUEST['logout'])) {

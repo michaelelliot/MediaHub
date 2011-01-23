@@ -31,14 +31,6 @@ $artist = @$_SESSION['fields']['artist'] or $artist = null;
 $title = @$_SESSION['fields']['title'] or $title = null;
 // TODO?
 $bitrate = @$_SESSION['fields']['bitrate'] or $bitrate = null;
-
-if (@$_SESSION['fields']['found_via'] == 'mkeys') {
-    $messages[] = "Media Object matched! Found using the mkey <b>" . $_SESSION['fields']['found_using'] . "</b>";
-    $messages[] = "Media Object mclass is <b>$mclass.</b>";
-} else {
-    $messages[] = "Unable to find a matching Media Object :(";
-    if ($mclass != "unknown" && $mclass) $messages[] = "Media Object mclass is <i>probably</i> <b>$mclass.</b>";
-}
 ?>
 <script type="text/javascript">
     // TODO: Impliment

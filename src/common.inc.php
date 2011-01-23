@@ -13,4 +13,11 @@ function json_sanitize($json) {
 function sanitize_search_term($t) {
     return preg_replace("/[^a-z0-9'!@#\$%^&\*\(\)\[\]\{\}\-\+:,\. ]/i", '', $t);
 }
+function add_message($m) {
+    if (@!$_SESSION['messages']) {
+        $_SESSION['messages'] = array($m);
+    } else {
+        $_SESSION['messages'][] = $m;
+    }
+}
 ?>
