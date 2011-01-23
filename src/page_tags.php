@@ -268,17 +268,6 @@ if (@$_SESSION['fields']['found_via'] == 'mkeys') {
         });
      });
 </script>
-
-<ul class="messages">
-    <?php
-        if (count($messages)) {
-            foreach($messages as $m) {
-                print "<li>$m</li>";
-            }
-        }
-    ?>
-</ul>
-
 <div class="box">
     <table cellpadding="0" cellspacing="0">
         <tr>
@@ -297,7 +286,6 @@ if (@$_SESSION['fields']['found_via'] == 'mkeys') {
         </tr>
         <tr><td class="first">mtag:</td><td><input id="mtag" name="mtag" type="text" value="" /></td><td><input id="lookup_mtag" type="button" value="Lookup" /></td></tr>
     </table>
-
 </div>
 <div class="box">
     

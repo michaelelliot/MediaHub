@@ -25,13 +25,16 @@ require_once("common.inc.php");
 require_once("TwitterOAuth/TwitterOAuth.php");
 require_once('sql_db/sql_db.inc.php');
 
+$messages = array();
+$section = @trim(preg_replace("/[^a-z]/i", "", $_REQUEST['section'])) or $section = "home";
+
 if (isset($_REQUEST['logout'])) {
     $logged_in = false;
     unset($_SESSION['twitter']);
 }
 
-$messages = array();
-$section = @trim(preg_replace("/[^a-z]/i", "", $_REQUEST['section'])) or $section = "home";
+if (isset($_REQUEST['login']) && !$logged_in) $messages[] = 'Error logging in. The Twitter account @<b>' . TwitterOAuth::getUsername() . '</b> does not have access.';
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -163,6 +166,15 @@ $section = @trim(preg_replace("/[^a-z]/i", "", $_REQUEST['section'])) or $sectio
                         </td>
                         <td valign="top" class="page">
                             <div class="page">
+                                <ul class="messages"<?php if (!count($messages)) echo ' style="display: none;"'; ?>>
+                                    <?php
+                                        if (count($messages)) {
+                                            foreach($messages as $m) {
+                                                print "<li>$m</li>";
+                                            }
+                                        }
+                                    ?>
+                                </ul>
                                 <?php
                                 try {
                                     if ($section == "upload") {

@@ -1,25 +1,24 @@
 MediaHub
-========
-Copyright (C) 2011 Network Digital
+=
+Requirements
+==
+* MySQL 5+
+* PHP 5.2+
+* Apache 2.2+
+* Twitter account
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The Software shall be used for Good, not Evil.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+* Please follow the following steps to get MediaHub up and running on your server
+1. Go to https:/www.twitter.com/apps and register a new application to get a set of consumer keys.
+2. Rename config.ini.rename to config.ini and open it in a text editor.
+3. Set consumer_key and consumer_secret under [oauth] to the values you got from Twitter.
+4. Set admin_username under [oauth] to the twitter handle you'd like to be administrator
+5. Update the server, username and password credentials under [mysql] to an existing account.
+6. Setup a MySQL database called 'mediahub' and ensure [mysql] username has access.
+7. Upload the *contents* of src/ to the location you'd like MediaTag to reside.
+8. Navigate to the URL of this location in a browser.
+9. ???
+10. PROFIT!
 
 See NOTES.md for more information
-
 If you'd like to help with this project, please email me at michael@digital.com.au.
 
