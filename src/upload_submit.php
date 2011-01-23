@@ -206,15 +206,11 @@ if (isset($result)) {
             $result = $client->google_search_btih(array('btih' => $info_hash));
             # Matched, on to second part (imdb_tt lookup)
             # TODO: Lookup imdb locally first
-            #
-            //            /*
-            /*
-             *     $mtag = generate_mtag();
-    $mkeys = "imdb:{$r->data->tconst}\n" .
-             "title:{$r->data->title} ({$r->data->year})\n";
-             */
-            #
-            # 
+
+            # Generate new mtag if doesn't exist
+/*mtag = generate_mtag();
+*/
+
             if (@$result['result'] == "success") {
                 add_message("Matched to imdb_tt <b>{$result['imdb_tt']}</b>");
                 $_SESSION['fields']['imdb_tt'] = $result['imdb_tt'];
@@ -222,14 +218,20 @@ if (isset($result)) {
                 # imdb_tt lookup
                 $result = $client->lookup_imdb_tt(array('imdb_tt' => $result['imdb_tt']));
                 if (@$result['result'] == "success") {
-                    add_message("Fields returned from IMDb using imdb_tt <b>{$result['imdb_tt']}</b>");
+                    add_message("Fields returned from IMDb using imdb_tt <b>{$result['imdb_fields']['imdb_tt']}</b>");
                     # Totally rework this
                     # TODO: find mclass in imdb fields and override if existing
-                    $_SESSION['fields']['imdb_tt'] = $result['imdb_tt'];
-                    $_SESSION['fields']['title'] = $result['title'];
-                    $_SESSION['fields']['year'] = $result['year'];
+                    array_merge($_SESSION['fields'], $result['imdb_fields']);
+                    $_SESSION['fields']['mkeys'][] = "imdb:{$result['imdb_fields']['imdb_tt']}";
 
-                    $_SESSION['fields']['mkeys'][] = "imdb:{$result['imdb_tt']}";
+                    switch($result['imdb_fields']['mclass']) {
+                        case "movie":
+                            $_SESSION['fields']['mkeys'][] = "title:{$result['imdb_fields']['title']} ({$result['imdb_fields']['year']});";
+                            break;
+                        case "album":
+                            $_SESSION['fields']['mkeys'][] = "title:{$result['imdb_fields']['artist']} - {$result['imdb_fields']['title']} ({$result['imdb_fields']['year']});";
+                            break;
+                    }
                     $_SESSION['fields']['mkeys'] = array_unique($_SESSION['fields']['mkeys']);
                     $found = true;
                 } else {
@@ -247,13 +249,9 @@ if (isset($result)) {
         header("Location: index.php?section=tags");
         
     } else if (@$result['result'] == "success") {
-        $_SESSION['fields']['found_via'] = 'mkeys';
-        $_SESSION['fields']['found_using'] = $result['mkey'];
         add_message("Media Object matched! Found using the mkey <b>{$_SESSION['fields']['found_using']}</b>");
         add_message("Media Object mclass is <b>$mclass.</b>");
-        foreach($result['meob'] as $key => $val) {
-            $_SESSION['fields'][$key] = $val;
-        }
+        $_SESSION['fields'] = $result['meob'];
         header("Location: index.php?section=tags");
         exit;
     } else {
