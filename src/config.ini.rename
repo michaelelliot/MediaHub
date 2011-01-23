@@ -4,7 +4,7 @@
 
 [general]
 version = "0.0.2"
-lib_path = 'lib/'
+lib_path = "lib/"
 debug = false
 
 [mysql]
@@ -14,12 +14,12 @@ username = "root"
 password = ""
 
 [mediatag]
-rpc_url = 'http://api.mediatag.org/json-rpc'
+rpc_url = "http://api.mediatag.org/json-rpc"
 
 [oauth]
 ; Get your own consumer key and secret from https://www.twitter.com/apps
-consumer_key = ''
-consumer_secret = ''
-callback_file = 'callback.php'
-admin_username = '@username'
+consumer_key = ""
+consumer_secret = ""
+callback_file = "callback.php"
+admin_username = "@username"
 anyone_can_login = false

@@ -7,7 +7,11 @@ require_once('TwitterOAuth/TwitterOAuth.php');
 $oauth = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
 $request_token = $oauth->getRequestToken(OAUTH_CALLBACK_URL);
 if (!$request_token || $oauth->http_code != 200) {
-    header("Location: ?twitter_auth_error");
+    print_r($oauth);
+    print $oauth->http_code;
+print $oauth->http_header;
+exit;
+    header("Location: ./?twitter_auth_error");
     exit;
 }
 # Save temporary credentials to session
