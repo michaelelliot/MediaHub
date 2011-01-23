@@ -98,15 +98,18 @@ if (@$_REQUEST['mclass'] == "detect") {
         case "bin":
         case "img":
             $mclass = "game";
-        # Probably an application
             break;
-
+        # Probably an application
         case "exe":
             $mclass = "application";
             break;
     }
 } else {
-    $mclass = @$_REQUEST['mclass'] or $mclass = null;
+    if (preg_match("/(setup|install)/i", $largest_filename)) {
+        $mclass = "application";
+    } else {
+        $mclass = null;
+    }
 }
 
 $name = null;

@@ -243,7 +243,7 @@ if (@$_SESSION['fields']['found_via'] == 'mkeys') {
             add_message('Looking up mkeys...');
             showLightbox();
             $.jsonRPC.setup({
-                endPoint: 'http://localhost/MediaTag/src/api/',
+                endPoint: '<?php echo MEDIATAG_JSON_RPC_URL ?>',
                 namespace: ''
             });
             $.jsonRPC.request('lookup_mkeys', params, {

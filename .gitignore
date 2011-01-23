@@ -1,4 +1,4 @@
 config.ini
 nbproject
-.psd
-.log
+*.psd
+*.log
