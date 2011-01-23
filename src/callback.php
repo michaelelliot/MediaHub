@@ -17,12 +17,14 @@ try {
     # TODO: Lookup TwitterOAuth::getUsername() in db and get user_id
     $user_id = 0;
     $_SESSION['twitter']['logged_in'] = false;
+
     if (TwitterOAuth::getUsername() == OAUTH_ADMIN_USERNAME) {
         $_SESSION['twitter']['administrator'] = true;
         $_SESSION['twitter']['logged_in'] = true;
     } else if ($user_id) {
         $_SESSION['twitter']['logged_in'] = true;
     }
+    if (OAUTH_ANYONE_CAN_LOGIN) $_SESSION['twitter']['logged_in'] = true;
     $_SESSION['twitter']['access_token'] = $access_token;
     
     # Get user credentials? (i.e. name, location, language, followers...)

@@ -12,6 +12,7 @@ define('CONSUMER_SECRET', $config['oauth']['consumer_secret']);
 define('OAUTH_CALLBACK_FILE', $config['oauth']['callback_file']);
 define('OAUTH_CALLBACK_URL', (!empty($_SERVER['HTTPS'])) ? "https://" . $_SERVER['SERVER_NAME'] . substr($_SERVER['REQUEST_URI'], 0, strlen($_SERVER['REQUEST_URI']) - strpos(strrev($_SERVER['REQUEST_URI']), "/")) . OAUTH_CALLBACK_FILE : "http://" . $_SERVER['SERVER_NAME'] . substr($_SERVER['REQUEST_URI'], 0, strlen($_SERVER['REQUEST_URI']) - strpos(strrev($_SERVER['REQUEST_URI']), "/")) . OAUTH_CALLBACK_FILE);
 define('OAUTH_ADMIN_USERNAME', str_replace('@', '', $config['oauth']['admin_username']));
+define('OAUTH_ANYONE_CAN_LOGIN', $config['oauth']['anyone_can_login']);
 define('GET_CREDENTIALS', false);
 define('DEBUG', false);
 
