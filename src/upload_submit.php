@@ -37,7 +37,7 @@ $torrent_data = file_get_contents(ini_get("upload_tmp_dir") . DIRECTORY_SEPARATO
 
 # Decode torrent data and determine info_hash
 $bencode = new Bencode();
-$result = $bencode::decode($torrent_data);
+$result = Bencode::decode($torrent_data);
 $largest_length = 0;
 $filetype_count = array();
 
@@ -250,7 +250,7 @@ if (isset($result)) {
         header("Location: index.php?section=tags");
         
     } else if (@$result['result'] == "success") {
-        add_message("Media Object matched! Found using the mkey <b>{$_SESSION['fields']['found_using']}</b>");
+        add_message("Media Object matched! Found using the mkey <b>{$_SESSION['mkey']}</b>");
         add_message("Media Object mclass is <b>$mclass.</b>");
         $_SESSION['fields'] = $result['meob'];
         header("Location: index.php?section=tags");

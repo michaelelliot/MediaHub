@@ -23,3 +23,4 @@ consumer_secret = ""
 callback_file = "callback.php"
 admin_username = "@username"
 anyone_can_login = false
+login_not_required = false
