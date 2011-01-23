@@ -141,24 +141,7 @@ if (@$_SESSION['fields']['found_via'] == 'mkeys') {
             alert("Javascript error: " + e);
         }
     }
-    
-    $('#save').click(function() {
 
-       // Sanity checks
-       if (!validate_mtag($('#mtag').val())) throw("Invalid mtag entered");
-       if ($('#mclass').val() == "unknown") throw("Must select an mclass");
-
-       alert('Feature not yet available.');
-       // TODO: ...
-        
-    });
-    // Validate that an mtag is valid
-    // Returns true if valid
-    // TODO: ...
-    function validate_mtag(mtag) {
-        if (!mtag) return false;
-        return true;
-    }
     // On document ready
     $(function() {
         <?php
@@ -201,7 +184,7 @@ if (@$_SESSION['fields']['found_via'] == 'mkeys') {
             case 'track':
         }
 
-        $('#lookup_mtag').bind('click', function() {
+        $('#lookup_mtag').click(function() {
 
             if (!validate_mtag($('#mtag').val())) {
                 alert("Invalid mtag entered.");
@@ -236,7 +219,7 @@ if (@$_SESSION['fields']['found_via'] == 'mkeys') {
 
         });
 
-        $('#lookup_mkeys').bind('click', function() {
+        $('#lookup_mkeys').click(function() {
             
             mclass = $('#mclass').val();
             if (mclass != 'unknown') {
@@ -274,6 +257,15 @@ if (@$_SESSION['fields']['found_via'] == 'mkeys') {
                 }
             });
         });
+        
+        $('#save').click(function() {
+            // Sanity checks
+            if (!validate_mtag($('#mtag').val())) throw("Invalid mtag entered");
+            if ($('#mclass').val() == "unknown") throw("Must select an mclass");
+
+            alert('Feature not yet available.');
+            // TODO: Implement
+            });
      });
 </script>
 <div class="box">
@@ -314,6 +306,7 @@ if (@$_SESSION['fields']['found_via'] == 'mkeys') {
         <div id="tabs-top-debug">
             <textarea id="debug" class="nowrap"><?php print_r($_SESSION['fields']) ?></textarea>
         </div>
+    </div>
 </div>
 <hr />
 <div class="box">
