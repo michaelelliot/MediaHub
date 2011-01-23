@@ -149,6 +149,7 @@ if (isset($result['info']['name'])) {
 }
 
 # Set main fields
+$_SESSION['fields'] = array();
 $_SESSION['fields']['mclass'] = $mclass;
 $_SESSION['fields']['name'] = $name;
 $_SESSION['fields']['artist'] = $artist;
@@ -221,15 +222,15 @@ if (isset($result)) {
                     add_message("Fields returned from IMDb using imdb_tt <b>{$result['imdb_fields']['imdb_tt']}</b>");
                     # Totally rework this
                     # TODO: find mclass in imdb fields and override if existing
-                    array_merge($_SESSION['fields'], $result['imdb_fields']);
+                    $_SESSION['fields'] = array_merge($_SESSION['fields'], $result['imdb_fields']);
                     $_SESSION['fields']['mkeys'][] = "imdb:{$result['imdb_fields']['imdb_tt']}";
 
                     switch($result['imdb_fields']['mclass']) {
                         case "movie":
-                            $_SESSION['fields']['mkeys'][] = "title:{$result['imdb_fields']['title']} ({$result['imdb_fields']['year']});";
+                            $_SESSION['fields']['mkeys'][] = "title:{$result['imdb_fields']['title']} ({$result['imdb_fields']['year']})";
                             break;
                         case "album":
-                            $_SESSION['fields']['mkeys'][] = "title:{$result['imdb_fields']['artist']} - {$result['imdb_fields']['title']} ({$result['imdb_fields']['year']});";
+                            $_SESSION['fields']['mkeys'][] = "title:{$result['imdb_fields']['artist']} - {$result['imdb_fields']['title']} ({$result['imdb_fields']['year']})";
                             break;
                     }
                     $_SESSION['fields']['mkeys'] = array_unique($_SESSION['fields']['mkeys']);

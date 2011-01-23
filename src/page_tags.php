@@ -146,14 +146,15 @@ $bitrate = @$_SESSION['fields']['bitrate'] or $bitrate = null;
         switch($('#mclass').val()) {
             case 'movie':
                 <?php
+                
                 if (isset($_SESSION['fields']['title'])) echo "$('#movie_title').val ('" . json_sanitize($_SESSION['fields']['title']) . "');";
                 if (isset($_SESSION['fields']['year'])) echo "$('#movie_year').val ('" . json_sanitize($_SESSION['fields']['year']) . "');";
                 if (isset($_SESSION['fields']['plot'])) echo "$('#movie_plot').val ('" . json_sanitize($_SESSION['fields']['plot']) . "');";
                 if (isset($_SESSION['fields']['tagline'])) echo "$('#movie_tagline').val ('" . json_sanitize($_SESSION['fields']['tagline']) . "');";
-                if (isset($_SESSION['fields']['genres'])) echo "$('#movie_genres').val ('" . join("; ", json_sanitize($_SESSION['fields']['genres'])) . "');";
-                if (isset($_SESSION['fields']['actors'])) echo "$('#movie_actors').val ('" . join("; ", json_sanitize($_SESSION['fields']['actors'])) . "');";;
-                if (isset($_SESSION['fields']['directors'])) echo "$('#movie_directors').val ('" . join("; ", json_sanitize($_SESSION['fields']['directors'])) . "');";
-                if (isset($_SESSION['fields']['writers'])) echo "$('#movie_writers').val ('" . join("; ", json_sanitize($_SESSION['fields']['writers'])) . "');";
+                if (!empty($_SESSION['fields']['genres'])) echo "$('#movie_genres').val ('" . json_sanitize(join("; ", $_SESSION['fields']['genres'])) . "');";
+                if (!empty($_SESSION['fields']['actors'])) echo "$('#movie_actors').val ('" . json_sanitize(join("; ", $_SESSION['fields']['actors'])) . "');";;
+                if (!empty($_SESSION['fields']['directors'])) echo "$('#movie_directors').val ('" . json_sanitize(join("; ", $_SESSION['fields']['directors'])) . "');";
+                if (!empty($_SESSION['fields']['writers'])) echo "$('#movie_writers').val ('" . json_sanitize(join("; ", $_SESSION['fields']['writers'])) . "');";
                 if (isset($_SESSION['fields']['runtime'])) echo "$('#movie_runtime').val ('" . json_sanitize($_SESSION['fields']['runtime']) . "');";
                 if (isset($_SESSION['fields']['release_date'])) echo "$('#movie_release_date').val ('" . json_sanitize($_SESSION['fields']['release_date']) . "');";
                 if (isset($_SESSION['fields']['classification'])) echo "$('#movie_classification').val ('" . json_sanitize($_SESSION['fields']['classification']) . "');";
