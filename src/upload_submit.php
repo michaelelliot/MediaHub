@@ -206,6 +206,9 @@ if (isset($result)) {
             $result = $client->google_search_btih(array('btih' => $info_hash));
             # Matched, on to second part (imdb_tt lookup)
             # TODO: Lookup imdb locally first
+            #
+            #
+            # 
             if (@$result['result'] == "success") {
                 add_message("Matched to imdb_tt <b>{$result['imdb_tt']}</b>");
                 $_SESSION['fields']['imdb_tt'] = $result['imdb_tt'];
