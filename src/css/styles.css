@@ -57,13 +57,14 @@ h3 {
     line-height: 10px;
 }
 
-input[type=button] {
+input[type=button], input[type=submit] {
     width: 150px;
     height: 26px;
     font-family: verdana;
 }
+
 div.box {
-    margin: 0 0 10px 0;
+    margin: 5px 0 5px 0;
 }
 div.box table {
     width: 100%;

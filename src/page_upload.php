@@ -48,6 +48,15 @@ if (!$logged_in) throw(new Exception("Must be logged in to view this page"));
                 <p>You browser doesn't have Flash, Silverlight, Gears, BrowserPlus or HTML5 support.</p>
             </div>
         </div>
+        <p>Drag and drop a torrent file into the container above.</p>
+        <div class="box">
+            <h3>Torrent URL:</h3>
+            <div>
+            <input type="text" id="torrent_url" name="torrent_url" /><br />
+            <input type="submit" value="Fetch Torrent" style="float: right;" />
+            </div>
+        </div><p>Or you can use the URL of a torrent file.</p>
+        
     </form>
-    <p>Drag and drop the torrent file of the content into the container above.</p>
+    
 </div>

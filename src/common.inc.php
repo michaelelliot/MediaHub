@@ -20,4 +20,15 @@ function add_message($m) {
         $_SESSION['messages'][] = $m;
     }
 }
+function curl_get_file_contents($url)
+{
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_ENCODING, 1);
+    $contents = curl_exec($ch);
+    curl_close($ch);
+    if ($contents) return $contents;
+    else return FALSE;
+}
 ?>

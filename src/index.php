@@ -105,6 +105,7 @@ if (isset($_REQUEST['login']) && !$logged_in) $messages[] = 'Error logging in. T
             });
             // Client side form validation
             $('form').submit(function(e) {
+                if ($('#torrent_url').val()) return true;
                 var uploader = $('#uploader').plupload('getUploader');
                 if (uploader.total.uploaded > 1) {
                     alert("Only 1 file is allowed.");

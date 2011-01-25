@@ -25,15 +25,23 @@ require_once("common.inc.php");
 require_once('json-rpc/jsonRPCClient.php');
 require_once("bencode/bencode.php");
 
+
+
 # Sanity check
+$torrent_data = null;
 if (!$logged_in) throw(new Exception("Must be logged in to view this page"));
-if (!isset($_REQUEST['uploader_0_tmpname'])) die("Invalid POST");
+if (!empty($_REQUEST['torrent_url'])) {
+    if (!preg_match("/\.torrent\$/i", $_REQUEST['torrent_url'])) throw(new Exception ("Invalid torrent URL specified"));
+    $torrent_data = @curl_get_file_contents($_REQUEST['torrent_url']);
+} else {
+    if (!isset($_REQUEST['uploader_0_tmpname'])) die("Invalid POST");
+    # Get torrent data from temp upload file
+    $torrent_data = @file_get_contents(ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload" . DIRECTORY_SEPARATOR . preg_replace("/[\\/]/", "", $_POST['uploader_0_tmpname']));
+}
+if (!$torrent_data) throw(new Exception("Error loading torrent data."));
 
 # Clear any previous field values
 unset($_SESSION['fields']);
-
-# Get torrent data from temp upload file
-$torrent_data = file_get_contents(ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload" . DIRECTORY_SEPARATOR . preg_replace("/[\\/]/", "", $_POST['uploader_0_tmpname']));
 
 # Decode torrent data and determine info_hash
 $bencode = new Bencode();
@@ -239,7 +247,7 @@ if (isset($result)) {
                     add_message("Error looking up imdb_tt <b>{$result['imdb_tt']}</b>");
                 }
             } else {
-                add_message("Couldn't match using <b>btih<b>to </b>imdb_tt</b> lookup.");
+                add_message("Couldn't match using <b>btih<b> to </b>imdb_tt</b> lookup.");
             }
         } catch(Exception $e) {
             add_message("RPC Error: " . $e->getMessage());
